@@ -1,45 +1,29 @@
 name: Daily Swing Trading Analysis
-
 on:
   schedule:
-    # 10:15 UTC = 3:45 PM IST, Mon-Fri (15 min after NSE close, so the day's
-    # candle is complete). Cron is in UTC.
-    - cron: "15 10 * * 1-5"
-  workflow_dispatch: {}   # lets you trigger a run manually from the Actions tab
-
+    - cron: 15 10 * * 1-5
+  workflow_dispatch: {}
 permissions:
-  contents: write   # needed so the workflow can commit the generated website
-
+  contents: write
 jobs:
   run-analysis:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repo
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Run daily analysis
+          python-version: 3.11
+      - run: pip install -r requirements.txt
+      - run: python main.py
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           DATA_SOURCE: yfinance
-        run: python main.py
-
-      - name: Upload report artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: swing-report-${{ github.run_number }}
+          name: swing-report
           path: reports/
-
-      - name: Publish website (docs/) back to the repo
-        uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Daily swing report — ${{ github.run_number }}"
-          file_pattern: "docs/**"
+          commit_message: Daily swing report
+          file_pattern: docs/**
