@@ -4,7 +4,7 @@ on:
   schedule:
     # 10:15 UTC = 3:45 PM IST, Mon-Fri (15 min after NSE close, so the day's
     # candle is complete). Cron is in UTC.
-    - cron: "15 10 * * 1-5"
+    - cron: 15 10 * * 1-5
   workflow_dispatch: {}   # lets you trigger a run manually from the Actions tab
 
 permissions:
