@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Swing Report — 2026-08-09</title>
+<style>
+:root {
+  --bg: #0f1115; --card: #171a21; --border: #262b36;
+  --text: #e8eaed; --muted: #9aa3b2;
+  --green: #2fbf71; --yellow: #e0a72e; --red: #e0524e;
+  --accent: #4f8cff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 0 0 40px 0;
+  background: var(--bg); color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px; line-height: 1.5;
+}
+header {
+  padding: 20px 16px 14px; border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; background: var(--bg); z-index: 10;
+}
+header h1 { font-size: 1.25rem; margin: 0 0 4px; }
+header .meta { color: var(--muted); font-size: 0.85rem; }
+.container { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+.section { margin-top: 24px; }
+.section h2 {
+  font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--muted); margin: 0 0 10px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.badge {
+  display: inline-block; padding: 3px 10px; border-radius: 999px;
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.02em;
+}
+.badge.GREEN { background: rgba(47,191,113,0.15); color: var(--green); }
+.badge.YELLOW { background: rgba(224,167,46,0.15); color: var(--yellow); }
+.badge.RED { background: rgba(224,82,78,0.15); color: var(--red); }
+.badge.ACTIONABLE { background: rgba(47,191,113,0.15); color: var(--green); }
+.badge.WATCH { background: rgba(224,167,46,0.15); color: var(--yellow); }
+.badge.REJECT { background: rgba(224,82,78,0.12); color: var(--red); }
+.regime-line { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+ul.reasons { margin: 8px 0 0; padding-left: 18px; color: var(--muted); font-size: 0.92rem; }
+ul.reasons li { margin-bottom: 4px; }
+.sector-row {
+  display: flex; justify-content: space-between; padding: 8px 0;
+  border-bottom: 1px solid var(--border); font-size: 0.95rem;
+}
+.sector-row:last-child { border-bottom: none; }
+.sector-row .rank { color: var(--muted); width: 22px; flex-shrink: 0; }
+.sector-row .ret.pos { color: var(--green); }
+.sector-row .ret.neg { color: var(--red); }
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 14px 16px; margin-bottom: 12px;
+}
+.card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.card-top .name { font-size: 1.05rem; font-weight: 700; }
+.card-top .score { color: var(--muted); font-size: 0.85rem; }
+.card .setup-line { color: var(--muted); font-size: 0.85rem; margin-bottom: 10px; }
+.grid2 {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; font-size: 0.92rem; margin-bottom: 8px;
+}
+.grid2 .label { color: var(--muted); }
+.grid2 .value { text-align: right; font-variant-numeric: tabular-nums; }
+.notes { margin: 8px 0 0; padding-left: 18px; font-size: 0.88rem; color: var(--muted); }
+.watch-item, .reject-item {
+  padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.92rem;
+}
+.watch-item:last-child, .reject-item:last-child { border-bottom: none; }
+.watch-item .name, .reject-item .name { font-weight: 600; }
+.watch-item .detail, .reject-item .detail { color: var(--muted); font-size: 0.85rem; margin-top: 2px; }
+.empty { color: var(--muted); font-style: italic; font-size: 0.92rem; }
+.decision {
+  font-size: 1.05rem; font-weight: 700; text-align: center;
+  padding: 16px; border-radius: 12px; background: var(--card); border: 1px solid var(--border);
+}
+.warning {
+  margin-top: 28px; padding: 14px 16px; border-radius: 12px;
+  background: rgba(224,167,46,0.08); border: 1px solid rgba(224,167,46,0.3);
+  color: var(--muted); font-size: 0.85rem;
+}
+.history-link { display: block; margin-top: 20px; text-align: center; }
+.history-link a { color: var(--accent); text-decoration: none; font-size: 0.9rem; }
+table.hist { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+table.hist td, table.hist th { padding: 8px 6px; border-bottom: 1px solid var(--border); text-align: left; }
+table.hist a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Indian Equity Swing Report</h1>
+  <div class="meta">2026-08-09 &middot; data: 2026-08-09 05:23 IST (source: yfinance, end-of-day data, not live intraday)</div>
+</header>
+<div class="container">
+
+  <div class="section">
+    <h2>Market Regime</h2>
+    <div class="regime-line">
+      <span class="badge GREEN">GREEN</span>
+      <span class="meta">Medium confidence</span>
+    </div>
+    <ul class="reasons"><li>NIFTY (24571) is above its 50-DMA (23984).</li><li>NIFTY is below its 200-DMA (24766) — long-term trend impaired.</li><li>50-DMA is rising.</li><li>Breadth: 71% of tracked universe above their 50-DMA.</li><li>20-day annualised volatility is moderate (10.4%).</li></ul>
+  </div>
+
+  <div class="section">
+    <h2>Sector Leaders</h2>
+    <div class="sector-row"><span class="rank">1.</span><span>IT</span><span class="ret pos">+12.7%</span></div><div class="sector-row"><span class="rank">2.</span><span>Auto</span><span class="ret pos">+12.3%</span></div><div class="sector-row"><span class="rank">3.</span><span>Metals &amp; Mining</span><span class="ret pos">+3.9%</span></div><div class="sector-row"><span class="rank">4.</span><span>Capital Goods &amp; Infra</span><span class="ret pos">+3.6%</span></div><div class="sector-row"><span class="rank">5.</span><span>Consumer Durables &amp; Retail</span><span class="ret pos">+3.1%</span></div>
+  </div>
+
+  <div class="section">
+    <h2>Actionable Trades</h2>
+    
+<div class="card">
+  <div class="card-top">
+    <span class="name">BHARATFORG</span>
+    <span class="score">86/100</span>
+  </div>
+  <div class="setup-line">Breakout &middot; Auto</div>
+  <div class="grid2">
+    <div class="label">Entry</div><div class="value">₹2239.2</div>
+    <div class="label">Stop</div><div class="value">₹2082.0</div>
+    <div class="label">Target</div><div class="value">₹2585.04</div>
+    <div class="label">Reward:Risk</div><div class="value">2.2</div>
+    <div class="label">Qty</div><div class="value">9</div>
+    <div class="label">Capital deployed</div><div class="value">₹20152.8</div>
+    <div class="label">Max loss</div><div class="value">₹1414.8</div>
+    <div class="label">Holding period</div><div class="value">2–20 sessions</div>
+  </div>
+  <ul class="notes"><li>Breakout above 2232.5 resistance with volume 1.4x the 20-day average.</li></ul>
+</div>
+<div class="card">
+  <div class="card-top">
+    <span class="name">HINDALCO</span>
+    <span class="score">80/100</span>
+  </div>
+  <div class="setup-line">Breakout &middot; Metals &amp; Mining</div>
+  <div class="grid2">
+    <div class="label">Entry</div><div class="value">₹1047.13</div>
+    <div class="label">Stop</div><div class="value">₹935.1</div>
+    <div class="label">Target</div><div class="value">₹1293.6</div>
+    <div class="label">Reward:Risk</div><div class="value">2.2</div>
+    <div class="label">Qty</div><div class="value">13</div>
+    <div class="label">Capital deployed</div><div class="value">₹13612.69</div>
+    <div class="label">Max loss</div><div class="value">₹1456.39</div>
+    <div class="label">Holding period</div><div class="value">2–20 sessions</div>
+  </div>
+  <ul class="notes"><li>Breakout above 1044.0 resistance with volume 1.9x the 20-day average.</li></ul>
+</div>
+  </div>
+
+  <div class="section">
+    <h2>Watchlist</h2>
+    
+<div class="watch-item">
+  <div class="name">CIPLA <span class="badge WATCH">WATCH</span></div>
+  <div class="detail">Trend Pullback &middot; score 74 &middot; trigger ₹1471.12 &middot; invalidation ₹1406.23</div>
+</div>
+<div class="watch-item">
+  <div class="name">AUROPHARMA <span class="badge WATCH">WATCH</span></div>
+  <div class="detail">Breakout &middot; score 74 &middot; trigger ₹1639.3 &middot; invalidation ₹1512.0</div>
+</div>
+<div class="watch-item">
+  <div class="name">RECLTD <span class="badge WATCH">WATCH</span></div>
+  <div class="detail">Trend Pullback &middot; score 72 &middot; trigger ₹368.84 &middot; invalidation ₹350.91</div>
+</div>
+<div class="watch-item">
+  <div class="name">SBIN <span class="badge WATCH">WATCH</span></div>
+  <div class="detail">Breakout &middot; score 71 &middot; trigger ₹1091.36 &middot; invalidation ₹1000.8</div>
+</div>
+<div class="watch-item">
+  <div class="name">MARICO <span class="badge WATCH">WATCH</span></div>
+  <div class="detail">Trend Pullback &middot; score 71 &middot; trigger ₹866.31 &middot; invalidation ₹836.5</div>
+</div>
+  </div>
+
+  <div class="section">
+    <h2>Top Rejected Candidates</h2>
+    
+<div class="reject-item">
+  <div class="name">SUNPHARMA <span class="badge REJECT">REJECT</span></div>
+  <div class="detail">score 70</div>
+</div>
+<div class="reject-item">
+  <div class="name">TORNTPHARM <span class="badge REJECT">REJECT</span></div>
+  <div class="detail">score 70</div>
+</div>
+<div class="reject-item">
+  <div class="name">BHARTIARTL <span class="badge REJECT">REJECT</span></div>
+  <div class="detail">score 68</div>
+</div>
+<div class="reject-item">
+  <div class="name">DALBHARAT <span class="badge REJECT">REJECT</span></div>
+  <div class="detail">score 68</div>
+</div>
+<div class="reject-item">
+  <div class="name">INDUSINDBK <span class="badge REJECT">REJECT</span></div>
+  <div class="detail">score 67</div>
+</div>
+  </div>
+
+  <div class="section">
+    <div class="decision">Final decision: TAKE TWO TRADES</div>
+  </div>
+
+  <div class="warning">
+    This is an analytical trading model, not a guarantee of returns. Market conditions
+    can invalidate technical setups. Verify current prices, liquidity, corporate events
+    and order details before trading. Fundamentals/news are not auto-checked — confirm
+    manually before entering any ACTIONABLE trade.
+  </div>
+
+  <div class="history-link"><a href="reports/index.html">View past reports →</a></div>
+</div>
+</body>
+</html>
