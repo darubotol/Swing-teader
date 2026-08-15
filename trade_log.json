@@ -1,0 +1,34 @@
+[
+  {
+    "ticker": "BAJAJFINSV.NS",
+    "sector": "Banking & Financials",
+    "setup": "Trend Pullback",
+    "score": 81.8,
+    "date_added": "2026-08-15",
+    "entry": 2018.34,
+    "stop": 1930.37,
+    "target": 2211.87,
+    "qty": 10,
+    "capital_deployed": 20183.4,
+    "status": "OPEN",
+    "date_closed": null,
+    "exit_price": null,
+    "pnl": null
+  },
+  {
+    "ticker": "TECHM.NS",
+    "sector": "IT",
+    "setup": "Trend Pullback",
+    "score": 80.6,
+    "date_added": "2026-08-15",
+    "entry": 1640.96,
+    "stop": 1576.77,
+    "target": 1782.18,
+    "qty": 12,
+    "capital_deployed": 19691.52,
+    "status": "OPEN",
+    "date_closed": null,
+    "exit_price": null,
+    "pnl": null
+  }
+]

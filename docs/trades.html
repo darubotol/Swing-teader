@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Report History</title>
+<title>Trade Record</title>
 <style>
 :root {
   --bg: #0f1115; --card: #171a21; --border: #262b36;
@@ -116,15 +116,51 @@ table.hist a { color: var(--accent); text-decoration: none; }
 </style>
 </head>
 <body>
-<header><h1>Report History</h1></header>
+<header><h1>Trade Record</h1><div class="meta">Every ACTIONABLE trade the system has issued</div></header>
 <div class="container">
   <div class="section">
-    <table class="hist">
-      <tr><th>Date</th><th></th></tr>
-      <tr><td>index</td><td><a href="index.html">Open report</a></td></tr><tr><td>2026-08-15</td><td><a href="2026-08-15.html">Open report</a></td></tr><tr><td>2026-08-14</td><td><a href="2026-08-14.html">Open report</a></td></tr><tr><td>2026-08-13</td><td><a href="2026-08-13.html">Open report</a></td></tr><tr><td>2026-08-12</td><td><a href="2026-08-12.html">Open report</a></td></tr><tr><td>2026-08-11</td><td><a href="2026-08-11.html">Open report</a></td></tr><tr><td>2026-08-10</td><td><a href="2026-08-10.html">Open report</a></td></tr><tr><td>2026-08-09</td><td><a href="2026-08-09.html">Open report</a></td></tr>
-    </table>
+    
+<div class="stat-grid">
+  <div class="stat-box"><div class="num">2</div><div class="lbl">Total trades</div></div>
+  <div class="stat-box"><div class="num">2</div><div class="lbl">Open</div></div>
+  <div class="stat-box"><div class="num win">0</div><div class="lbl">Target hit</div></div>
+  <div class="stat-box"><div class="num loss">0</div><div class="lbl">Stop hit</div></div>
+  <div class="stat-box"><div class="num">0</div><div class="lbl">Expired</div></div>
+  <div class="stat-box"><div class="num">—</div><div class="lbl">Win rate</div></div>
+</div>
+<div class="stat-box" style="margin-bottom:20px;">
+  <div class="num ">₹0</div><div class="lbl">Total P&amp;L (closed trades)</div>
+</div>
+
+    
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">BAJAJFINSV</span>
+    <span class="badge OPEN">OPEN</span>
   </div>
-  <div class="history-link"><a href="../index.html">← Back to latest report</a></div>
+  <div class="dates">Trend Pullback &middot; given 2026-08-15</div>
+  <div class="prices">
+    <span>Entry <b>₹2018.34</b></span>
+    <span>Stop <b>₹1930.37</b></span>
+    <span>Target <b>₹2211.87</b></span>
+  </div>
+  
+</div>
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">TECHM</span>
+    <span class="badge OPEN">OPEN</span>
+  </div>
+  <div class="dates">Trend Pullback &middot; given 2026-08-15</div>
+  <div class="prices">
+    <span>Entry <b>₹1640.96</b></span>
+    <span>Stop <b>₹1576.77</b></span>
+    <span>Target <b>₹1782.18</b></span>
+  </div>
+  
+</div>
+  </div>
+  <div class="history-link"><a href="index.html">&larr; Back to latest report</a></div>
 </div>
 </body>
 </html>
