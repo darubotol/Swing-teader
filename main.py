@@ -25,6 +25,7 @@ import analysis
 import position_sizing
 import report_generator
 import html_report
+import trade_log
 import telegram_bot
 
 
@@ -118,6 +119,19 @@ def main():
         f.write(history_html)
 
     print("Website pages written to docs/ (published via GitHub Pages).")
+
+    # 7c. Trade log — update existing open trades, then log today's new ones ---
+    log = trade_log.load_log()
+    log = trade_log.update_open_trades(log, universe_data, today)
+    log = trade_log.add_new_trades(log, buckets, today)
+    trade_log.save_log(log)
+    stats = trade_log.summary_stats(log)
+    print(f"Trade log: {stats}")
+
+    trades_html = html_report.build_trades_html(log, stats)
+    with open("docs/trades.html", "w") as f:
+        f.write(trades_html)
+    print("Trade record page written to docs/trades.html.")
 
     # 8. Send to Telegram --------------------------------------------------
     telegram_bot.send_message(short_msg)
