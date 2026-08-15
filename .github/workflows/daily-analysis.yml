@@ -26,4 +26,4 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Daily swing report
-          file_pattern: docs/**
+          file_pattern: docs/**trade_log.json
