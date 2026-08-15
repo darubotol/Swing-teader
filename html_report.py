@@ -92,6 +92,32 @@ ul.reasons li { margin-bottom: 4px; }
 table.hist { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 table.hist td, table.hist th { padding: 8px 6px; border-bottom: 1px solid var(--border); text-align: left; }
 table.hist a { color: var(--accent); text-decoration: none; }
+.stat-grid {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px;
+}
+.stat-box {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px 8px; text-align: center; flex: 1 1 30%; min-width: 90px;
+}
+.stat-box .num { font-size: 1.3rem; font-weight: 700; }
+.stat-box .lbl { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+.stat-box .num.win { color: var(--green); }
+.stat-box .num.loss { color: var(--red); }
+.trade-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 12px 16px; margin-bottom: 10px;
+}
+.trade-card .row1 { display: flex; justify-content: space-between; align-items: center; }
+.trade-card .ticker { font-weight: 700; }
+.trade-card .dates { color: var(--muted); font-size: 0.78rem; margin-top: 2px; }
+.trade-card .prices { display: flex; gap: 14px; font-size: 0.85rem; margin-top: 8px; color: var(--muted); }
+.trade-card .prices b { color: var(--text); font-weight: 600; }
+.trade-card .pnl { font-size: 0.9rem; font-weight: 700; margin-top: 6px; }
+.trade-card .pnl.pos { color: var(--green); } .trade-card .pnl.neg { color: var(--red); }
+.badge.OPEN { background: rgba(79,140,255,.15); color: var(--accent); }
+.badge.TARGET_HIT { background: rgba(47,191,113,.15); color: var(--green); }
+.badge.STOP_HIT { background: rgba(224,82,78,.15); color: var(--red); }
+.badge.EXPIRED { background: rgba(154,163,178,.15); color: var(--muted); }
 """
 
 
@@ -238,7 +264,79 @@ def build_html(regime: dict, sector_ranking: list, buckets: dict, data_ts: str) 
     manually before entering any ACTIONABLE trade.
   </div>
 
-  <div class="history-link"><a href="reports/index.html">View past reports →</a></div>
+  <div class="history-link"><a href="reports/index.html">View past reports &rarr;</a></div>
+  <div class="history-link"><a href="trades.html">View trade record &amp; win rate &rarr;</a></div>
+</div>
+</body>
+</html>"""
+
+
+def build_trades_html(log: list, stats: dict) -> str:
+    """Renders the full trade record page: summary stats + a card per trade,
+    newest first."""
+    def badge(status):
+        labels = {"OPEN": "OPEN", "TARGET_HIT": "TARGET HIT", "STOP_HIT": "STOP HIT", "EXPIRED": "EXPIRED"}
+        return f'<span class="badge {status}">{labels.get(status, status)}</span>'
+
+    win_rate_txt = f"{stats['win_rate']}%" if stats["win_rate"] is not None else "—"
+    pnl_cls = "win" if stats["total_pnl"] > 0 else ("loss" if stats["total_pnl"] < 0 else "")
+
+    stat_html = f"""
+<div class="stat-grid">
+  <div class="stat-box"><div class="num">{stats['total']}</div><div class="lbl">Total trades</div></div>
+  <div class="stat-box"><div class="num">{stats['open']}</div><div class="lbl">Open</div></div>
+  <div class="stat-box"><div class="num win">{stats['target_hit']}</div><div class="lbl">Target hit</div></div>
+  <div class="stat-box"><div class="num loss">{stats['stop_hit']}</div><div class="lbl">Stop hit</div></div>
+  <div class="stat-box"><div class="num">{stats['expired']}</div><div class="lbl">Expired</div></div>
+  <div class="stat-box"><div class="num">{win_rate_txt}</div><div class="lbl">Win rate</div></div>
+</div>
+<div class="stat-box" style="margin-bottom:20px;">
+  <div class="num {pnl_cls}">₹{stats['total_pnl']}</div><div class="lbl">Total P&amp;L (closed trades)</div>
+</div>
+"""
+
+    if not log:
+        cards_html = '<p class="empty">No trades logged yet — check back after the first ACTIONABLE trade is issued.</p>'
+    else:
+        cards = []
+        for t in sorted(log, key=lambda x: x["date_added"], reverse=True):
+            pnl_line = ""
+            if t["pnl"] is not None:
+                cls = "pos" if t["pnl"] >= 0 else "neg"
+                pnl_line = f'<div class="pnl {cls}">P&amp;L: ₹{t["pnl"]:+.2f}</div>'
+            closed_line = f' &middot; closed {_esc(t["date_closed"])}' if t.get("date_closed") else ""
+            cards.append(f"""
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">{_esc(t['ticker'].replace('.NS',''))}</span>
+    {badge(t['status'])}
+  </div>
+  <div class="dates">{_esc(t['setup'])} &middot; given {_esc(t['date_added'])}{closed_line}</div>
+  <div class="prices">
+    <span>Entry <b>₹{t['entry']}</b></span>
+    <span>Stop <b>₹{t['stop']}</b></span>
+    <span>Target <b>₹{t['target']}</b></span>
+  </div>
+  {pnl_line}
+</div>""")
+        cards_html = "".join(cards)
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trade Record</title>
+<style>{STYLE}</style>
+</head>
+<body>
+<header><h1>Trade Record</h1><div class="meta">Every ACTIONABLE trade the system has issued</div></header>
+<div class="container">
+  <div class="section">
+    {stat_html}
+    {cards_html}
+  </div>
+  <div class="history-link"><a href="index.html">&larr; Back to latest report</a></div>
 </div>
 </body>
 </html>"""
