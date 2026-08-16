@@ -436,4 +436,66 @@ def build_trades_html(log: list, stats: dict) -> str:
   </div>
   <div class="dates">{_esc(t['setup'])} &middot; given {_esc(t['date_added'])}{closed_line}</div>
   <div class="prices">
-    <span>Entry <b>₹{t['ent
+   <span>Entry <b>₹{t['entry']}</b></span>
+    <span>Stop <b>₹{t['stop']}</b></span>
+    <span>Target <b>₹{t['target']}</b></span>
+  </div>
+  {pnl_line}
+</div>""")
+        cards_html = "".join(cards)
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trade Ledger</title>
+<style>{STYLE}</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Indian Equity &middot; Swing Desk</div>
+  <h1>Trade Ledger</h1>
+  <div class="meta">Every actionable entry issued, and its outcome</div>
+</header>
+<div class="container">
+  <div class="section">
+    {stat_html}
+    {cards_html}
+  </div>
+  <div class="history-link"><a href="index.html">&larr; Back to latest report</a></div>
+</div>
+</body>
+</html>"""
+
+
+def build_history_index(report_dates: list) -> str:
+    """report_dates: list of date strings (YYYY-MM-DD), newest first."""
+    rows = "".join(
+        f'<tr><td>{_esc(d)}</td><td><a href="{_esc(d)}.html">Open &rarr;</a></td></tr>'
+        for d in report_dates
+    )
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Report Register</title>
+<style>{STYLE}</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Indian Equity &middot; Swing Desk</div>
+  <h1>Report Register</h1>
+</header>
+<div class="container">
+  <div class="section">
+    <table class="hist">
+      <tr><th>Date</th><th></th></tr>
+      {rows if rows else '<tr><td colspan="2" class="empty">No reports yet.</td></tr>'}
+    </table>
+  </div>
+  <div class="history-link"><a href="../index.html">&larr; Back to latest report</a></div>
+</div>
+</body>
+</html>"""
