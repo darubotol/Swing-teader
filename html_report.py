@@ -300,3 +300,92 @@ def _score_bucket_html(bucket_key, buckets):
 </div>""")
         return "".join(rows)
     return ""
+def build_html(regime: dict, sector_ranking: list, buckets: dict, data_ts: str) -> str:
+    today = datetime.date.today().isoformat()
+
+    reasons_html = "".join(f"<li>{_esc(r)}</li>" for r in regime["reasons"])
+
+    sector_rows = []
+    top5 = [(s, r) for s, r in sector_ranking[:5] if r == r]  # drop any stray NaN defensively
+    max_abs = max((abs(r) for _, r in top5), default=1) or 1
+    for i, (sector, ret) in enumerate(top5, 1):
+        cls = "pos" if ret >= 0 else "neg"
+        bar_pct = min(100, round(abs(ret) / max_abs * 100))
+        sector_rows.append(
+            f'<div class="sector-row"><div class="bar {cls}" style="width:{bar_pct}%;"></div>'
+            f'<span class="rank">{i}.</span>'
+            f'<span class="name">{_esc(sector)}</span><span class="ret {cls}">{ret:+.1f}%</span></div>'
+        )
+    sector_html = "".join(sector_rows) if sector_rows else '<p class="empty">No sector data.</p>'
+
+    n_actionable = len(buckets["actionable"])
+    if regime["regime"] == "RED":
+        decision = "NO TRADE — market conditions unsuitable"
+    elif n_actionable == 0:
+        decision = "WATCHLIST ONLY" if buckets["watch"] else "NO TRADE"
+    elif n_actionable == 1:
+        decision = "TAKE ONE TRADE"
+    else:
+        decision = "TAKE TWO TRADES"
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Swing Ledger — {today}</title>
+<style>{STYLE}</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Indian Equity &middot; Swing Desk</div>
+  <h1>The Daily Ledger</h1>
+  <div class="meta">{today} &middot; {_esc(data_ts)}</div>
+</header>
+<div class="container">
+
+  <div class="section">
+    <h2>Market Regime</h2>
+    <div class="regime-line">
+      <span class="badge {regime['regime']}"><span class="dot"></span> {regime['regime']}</span>
+      <span class="meta" style="font-family:var(--mono); color:var(--ink-dim); font-size:0.8rem;">{regime['confidence']} confidence</span>
+    </div>
+    <ul class="reasons">{reasons_html}</ul>
+  </div>
+
+  <div class="section">
+    <h2>Sector Leaders</h2>
+    {sector_html}
+  </div>
+
+  <div class="section">
+    <h2>Actionable Trades</h2>
+    {_score_bucket_html('actionable', buckets)}
+  </div>
+
+  <div class="section">
+    <h2>Watchlist</h2>
+    {_score_bucket_html('watch', buckets)}
+  </div>
+
+  <div class="section">
+    <h2>Top Rejected Candidates</h2>
+    {_score_bucket_html('reject', buckets)}
+  </div>
+
+  <div class="section">
+    <div class="decision"><span class="tick">§</span> {_esc(decision)} <span class="tick">§</span></div>
+  </div>
+
+  <div class="warning">
+    This is an analytical trading model, not a guarantee of returns. Market conditions
+    can invalidate technical setups. Verify current prices, liquidity, corporate events
+    and order details before trading. Fundamentals/news are not auto-checked — confirm
+    manually before entering any actionable trade.
+  </div>
+
+  <div class="history-link"><a href="reports/index.html">View past reports &rarr;</a></div>
+  <div class="history-link"><a href="trades.html">View trade record &amp; win rate &rarr;</a></div>
+</div>
+</body>
+</html>"""
