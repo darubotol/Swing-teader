@@ -257,6 +257,46 @@ def _score_bucket_html(bucket_key, buckets):
   <div class="figblock">
     <div class="figline"><span class="label">Entry</span><span class="value">₹{info['entry']}</span></div>
     <div class="figline"><span class="label">Stop</span><span class="value">₹{info['stop']}</span></div>
-    <div class="figline"><span class="label">Target</span><span class="value">₹{info['target']}</span></div>
     <div class="figline"><span class="label">Reward : Risk</span><span class="value">{pos['reward_risk']}</span></div>
-    <div cl
+    <div class="figline"><span class="label">Quantity</span><span class="value">{pos['qty']}</span></div>
+    <div class="figline"><span class="label">Capital deployed</span><span class="value">₹{pos['capital_deployed']}</span></div>
+    <div class="figline"><span class="label">Max loss</span><span class="value">₹{pos['max_loss']}</span></div>
+    <div class="figline"><span class="label">Holding period</span><span class="value">2–20 sessions</span></div>
+  </div>
+  <ul class="notes">{notes}</ul>
+</div>""")
+        return "".join(cards)
+
+    if bucket_key == "watch":
+        if not items:
+            return '<p class="empty">Nothing pending entry right now.</p>'
+        rows = []
+        for s in items[:10]:
+            info = s["info"]
+            rows.append(f"""
+<div class="watch-item">
+  <div class="watch-left">
+    <div class="name">{_esc(info['ticker'].replace('.NS',''))}</div>
+    <div class="detail">{_esc(info['setup'])} &middot; score {s['score']['total']:.0f} &middot; trigger ₹{info['entry']} &middot; invalidation ₹{info['stop']}</div>
+  </div>
+  <span class="stamp WATCH">Watch</span>
+</div>""")
+        return "".join(rows)
+
+    if bucket_key == "reject":
+        top = sorted(items, key=lambda x: x["score"]["total"], reverse=True)[:5]
+        if not top:
+            return '<p class="empty">No candidates scored high enough to record.</p>'
+        rows = []
+        for s in top:
+            info = s["info"]
+            rows.append(f"""
+<div class="reject-item">
+  <div class="reject-left">
+    <div class="name">{_esc(info['ticker'].replace('.NS',''))}</div>
+    <div class="detail">score {s['score']['total']:.0f}</div>
+  </div>
+  <span class="stamp REJECT">Reject</span>
+</div>""")
+        return "".join(rows)
+    return ""
