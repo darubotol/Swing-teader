@@ -6,120 +6,145 @@
 <title>Swing Ledger — 2026-08-16</title>
 <style>
 :root {
-  --bg: #0b0e14; --paper: #12161f; --paper-alt: #171b27;
-  --line: #262c3a; --line-strong: #3a4256;
-  --ink: #ece8dd; --ink-dim: #8891a3;
-  --saffron: #de8c3e; --saffron-dim: rgba(222,140,62,.14);
-  --gain: #52a97c; --gain-dim: rgba(82,169,124,.14);
-  --loss: #c8564f; --loss-dim: rgba(200,86,79,.14);
-  --info: #6c8ee0; --info-dim: rgba(108,142,224,.14);
-  --muted-badge: rgba(136,145,163,.16);
+  --bg-top: #131530; --bg: #09090f; --paper: #171a2e; --paper-alt: #1d2138;
+  --line: #2b3050; --line-strong: #4a5182;
+  --ink: #f3f0e4; --ink-dim: #9aa2c4;
+  --saffron: #f5a83f; --saffron-dim: rgba(245,168,63,.20);
+  --gain: #3ed492; --gain-dim: rgba(62,212,146,.20);
+  --loss: #ff6161; --loss-dim: rgba(255,97,97,.20);
+  --info: #8298ff; --info-dim: rgba(130,152,255,.20);
+  --muted-badge: rgba(154,162,196,.18);
   --serif: Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", ui-serif, serif;
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --mono: ui-monospace, "SF Mono", "Courier New", monospace;
 }
 * { box-sizing: border-box; }
+html { background: var(--bg); }
 body {
   margin: 0; padding: 0 0 48px 0;
-  background: var(--bg); color: var(--ink);
+  background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg) 480px);
+  color: var(--ink);
   font-family: var(--sans);
   font-size: 16px; line-height: 1.55;
 }
 header {
-  padding: 24px 20px 16px; border-bottom: 3px double var(--line-strong);
-  position: sticky; top: 0; background: var(--bg); z-index: 10;
+  padding: 26px 20px 18px; border-bottom: 3px double var(--line-strong);
+  position: sticky; top: 0; background: linear-gradient(180deg, var(--bg-top) 0%, rgba(19,21,48,0.97) 100%); z-index: 10;
 }
 header .eyebrow {
-  font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
-  color: var(--saffron); text-transform: uppercase; margin-bottom: 6px;
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.14em;
+  color: var(--saffron); text-transform: uppercase; margin-bottom: 8px; font-weight: 700;
 }
 header h1 {
-  font-family: var(--serif); font-size: 1.5rem; font-weight: 700;
-  letter-spacing: 0.01em; margin: 0 0 6px; color: var(--ink);
+  font-family: var(--serif); font-size: 1.6rem; font-weight: 700;
+  letter-spacing: 0.01em; margin: 0 0 8px; color: var(--ink);
+  background: linear-gradient(90deg, var(--ink) 0%, #d8c9a8 100%);
+  -webkit-background-clip: text; background-clip: text;
 }
 header .meta {
   color: var(--ink-dim); font-size: 0.78rem; font-family: var(--mono);
 }
 .container { max-width: 720px; margin: 0 auto; padding: 0 20px; }
-.section { margin-top: 30px; }
+.section { margin-top: 32px; }
 .section h2 {
   font-family: var(--serif); font-style: italic; font-weight: 400;
-  font-size: 1.02rem; color: var(--ink); margin: 0 0 14px; padding-bottom: 8px;
+  font-size: 1.08rem; color: var(--ink); margin: 0 0 14px; padding-bottom: 9px;
   border-bottom: 1px solid var(--line); letter-spacing: 0.01em;
+  display: flex; align-items: center; gap: 8px;
 }
-.badge {
-  display: inline-block; padding: 4px 12px; border-radius: 3px;
-  font-family: var(--mono); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em;
-  text-transform: uppercase; border: 1px solid transparent;
-}
-.badge.GREEN { background: var(--gain-dim); color: var(--gain); border-color: rgba(82,169,124,.35); }
-.badge.YELLOW { background: var(--saffron-dim); color: var(--saffron); border-color: rgba(222,140,62,.35); }
-.badge.RED { background: var(--loss-dim); color: var(--loss); border-color: rgba(200,86,79,.35); }
+.section h2::before { content: ""; width: 4px; height: 16px; background: var(--saffron); border-radius: 2px; display: inline-block; }
 
-/* Stamp-style status badges — rotated, double-ring, ledger-approval feel */
+.badge {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 4px;
+  font-family: var(--mono); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.badge.GREEN { background: var(--gain); color: #05261a; }
+.badge.YELLOW { background: var(--saffron); color: #2b1704; }
+.badge.RED { background: var(--loss); color: #2b0606; }
+
+/* Stamp-style status badges — rotated, solid-fill, ledger-approval feel */
 .stamp {
-  display: inline-block; padding: 5px 11px; border-radius: 4px;
-  font-family: var(--mono); font-size: 0.66rem; font-weight: 700; letter-spacing: 0.08em;
+  display: inline-block; padding: 6px 12px; border-radius: 4px;
+  font-family: var(--mono); font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em;
   text-transform: uppercase; border: 1.5px solid currentColor; transform: rotate(-2.5deg);
   position: relative;
 }
 .stamp::after {
   content: ""; position: absolute; inset: 2px; border: 1px solid currentColor;
-  border-radius: 2px; opacity: 0.5; pointer-events: none;
+  border-radius: 2px; opacity: 0.55; pointer-events: none;
 }
 .stamp.ACTIONABLE, .stamp.TARGET_HIT { color: var(--gain); background: var(--gain-dim); }
 .stamp.WATCH, .stamp.OPEN { color: var(--info); background: var(--info-dim); }
 .stamp.REJECT, .stamp.STOP_HIT { color: var(--loss); background: var(--loss-dim); }
 .stamp.EXPIRED { color: var(--ink-dim); background: var(--muted-badge); }
 
-.regime-line { display: flex; align-items: center; margin-bottom: 12px; }
+.regime-line { display: flex; align-items: center; margin-bottom: 14px; }
 .regime-line .badge { margin-right: 12px; }
 .regime-line .dot {
-  width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex-shrink: 0;
-  display: inline-block; margin-right: 6px;
+  width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0;
+  display: inline-block;
 }
 ul.reasons { margin: 8px 0 0; padding-left: 0; list-style: none; color: var(--ink-dim); font-size: 0.92rem; }
-ul.reasons li { margin-bottom: 6px; padding-left: 16px; position: relative; }
-ul.reasons li::before { content: "—"; position: absolute; left: 0; color: var(--line-strong); }
+ul.reasons li { margin-bottom: 7px; padding-left: 16px; position: relative; }
+ul.reasons li::before { content: "—"; position: absolute; left: 0; color: var(--saffron); opacity: 0.6; }
 
 .sector-row {
-  display: flex; align-items: baseline; gap: 10px; padding: 9px 0;
-  border-bottom: 1px solid var(--line); font-size: 0.95rem;
+  position: relative; overflow: hidden;
+  display: flex; align-items: baseline; gap: 10px; padding: 11px 10px;
+  margin-bottom: 4px; border-radius: 5px; font-size: 0.95rem;
+  background: var(--paper);
 }
-.sector-row:last-child { border-bottom: none; }
+.sector-row .bar {
+  position: absolute; left: 0; top: 0; bottom: 0; z-index: 0; opacity: 0.22;
+}
+.sector-row .bar.pos { background: var(--gain); }
+.sector-row .bar.neg { background: var(--loss); }
 .sector-row .rank {
-  font-family: var(--serif); color: var(--ink-dim); width: 20px; flex-shrink: 0; font-size: 0.9rem;
+  font-family: var(--serif); color: var(--ink-dim); width: 18px; flex-shrink: 0; font-size: 0.9rem;
+  position: relative; z-index: 1;
 }
-.sector-row .name { flex: 1; }
-.sector-row .ret { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 600; }
+.sector-row .name { flex: 1; position: relative; z-index: 1; font-weight: 600; }
+.sector-row .ret { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 700; position: relative; z-index: 1; }
 .sector-row .ret.pos { color: var(--gain); }
 .sector-row .ret.neg { color: var(--loss); }
 
 .card {
-  background: var(--paper); border: 1px solid var(--line); border-top: 2px solid var(--saffron);
-  border-radius: 6px; padding: 16px 18px; margin-bottom: 14px;
+  background: linear-gradient(155deg, var(--paper) 0%, var(--paper-alt) 100%);
+  border: 1px solid var(--line); border-top: 3px solid var(--saffron);
+  border-radius: 8px; padding: 18px 20px; margin-bottom: 16px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
 }
+.card.setup-breakout { border-top-color: var(--saffron); }
+.card.setup-breakout-retest { border-top-color: var(--info); }
+.card.setup-trend-pullback { border-top-color: var(--gain); }
 .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
-.card-top .name { font-family: var(--serif); font-size: 1.15rem; font-weight: 700; }
-.card-top .score { color: var(--ink-dim); font-size: 0.78rem; font-family: var(--mono); margin-top: 3px; }
+.card-top .name { font-family: var(--serif); font-size: 1.2rem; font-weight: 700; }
+.card-top .score {
+  display: inline-block; margin-top: 5px; padding: 2px 8px; border-radius: 3px;
+  font-size: 0.74rem; font-family: var(--mono); font-weight: 700;
+}
+.card-top .score.tier-a { background: var(--gain-dim); color: var(--gain); }
+.card-top .score.tier-b { background: var(--saffron-dim); color: var(--saffron); }
 .card .setup-line { color: var(--ink-dim); font-size: 0.82rem; font-family: var(--mono); margin-bottom: 12px; }
 .figline {
   display: flex; justify-content: space-between; align-items: baseline;
-  padding: 5px 0; font-size: 0.92rem; border-bottom: 1px solid var(--line);
+  padding: 6px 0; font-size: 0.92rem; border-bottom: 1px solid var(--line);
 }
 .figline:last-child { border-bottom: none; }
 .figline .label { color: var(--ink-dim); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.05em; }
-.figline .value { font-family: var(--serif); font-variant-numeric: tabular-nums; font-weight: 700; }
+.figline .value { font-family: var(--serif); font-variant-numeric: tabular-nums; font-weight: 700; color: var(--ink); }
 .figblock { margin-bottom: 10px; padding-top: 8px; border-top: 1px solid var(--line); }
 .notes { margin: 10px 0 0; padding-left: 0; list-style: none; font-size: 0.85rem; color: var(--ink-dim); font-style: italic; }
-.notes li { padding-left: 14px; position: relative; }
+.notes li { padding-left: 16px; position: relative; }
 .notes li::before { content: "❧"; position: absolute; left: 0; color: var(--saffron); font-style: normal; }
 
 .watch-item, .reject-item {
-  padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 0.92rem;
+  padding: 12px 14px; margin-bottom: 6px; border-radius: 6px; font-size: 0.92rem;
   display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  background: var(--paper); border-left: 3px solid var(--info);
 }
-.watch-item:last-child, .reject-item:last-child { border-bottom: none; }
+.reject-item { border-left-color: var(--loss); opacity: 0.85; }
 .watch-item .name, .reject-item .name { font-family: var(--serif); font-weight: 700; }
 .watch-item .detail, .reject-item .detail { color: var(--ink-dim); font-size: 0.78rem; margin-top: 3px; font-family: var(--mono); }
 .watch-left, .reject-left { flex: 1; }
@@ -130,9 +155,10 @@ ul.reasons li::before { content: "—"; position: absolute; left: 0; color: var(
 }
 
 .decision {
-  font-family: var(--serif); font-size: 1.1rem; font-weight: 700; text-align: center;
-  padding: 18px; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong);
-  letter-spacing: 0.02em;
+  font-family: var(--serif); font-size: 1.15rem; font-weight: 700; text-align: center;
+  padding: 20px; border-radius: 8px; letter-spacing: 0.02em;
+  background: linear-gradient(155deg, var(--paper) 0%, var(--paper-alt) 100%);
+  border: 1px solid var(--line-strong);
 }
 .decision .tick { color: var(--saffron); }
 
@@ -145,7 +171,7 @@ ul.reasons li::before { content: "—"; position: absolute; left: 0; color: var(
 .history-link { display: block; margin-top: 22px; text-align: center; }
 .history-link a {
   color: var(--saffron); text-decoration: none; font-size: 0.85rem;
-  font-family: var(--mono); letter-spacing: 0.03em;
+  font-family: var(--mono); letter-spacing: 0.03em; font-weight: 600;
 }
 table.hist { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 table.hist th {
@@ -153,41 +179,46 @@ table.hist th {
   letter-spacing: 0.06em; color: var(--ink-dim); text-align: left; padding: 8px 6px;
   border-bottom: 1px solid var(--line-strong);
 }
-table.hist td { padding: 10px 6px; border-bottom: 1px solid var(--line); font-family: var(--serif); }
-table.hist a { color: var(--saffron); text-decoration: none; font-family: var(--mono); font-size: 0.82rem; }
+table.hist td { padding: 12px 10px; border-bottom: 1px solid var(--line); font-family: var(--serif); background: var(--paper); }
+table.hist tr td:first-child { border-radius: 6px 0 0 6px; }
+table.hist tr td:last-child { border-radius: 0 6px 6px 0; }
+table.hist a { color: var(--saffron); text-decoration: none; font-family: var(--mono); font-size: 0.82rem; font-weight: 600; }
 
 .stat-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
 .stat-box {
-  background: var(--paper); border: 1px solid var(--line); border-radius: 6px;
-  padding: 14px 8px; text-align: center; flex: 1 1 30%; min-width: 90px;
+  background: linear-gradient(155deg, var(--paper) 0%, var(--paper-alt) 100%);
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: 16px 8px; text-align: center; flex: 1 1 30%; min-width: 90px;
 }
-.stat-box .num { font-family: var(--serif); font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.stat-box .num { font-family: var(--serif); font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 .stat-box .lbl {
-  font-size: 0.65rem; color: var(--ink-dim); margin-top: 4px; font-family: var(--mono);
+  font-size: 0.65rem; color: var(--ink-dim); margin-top: 5px; font-family: var(--mono);
   text-transform: uppercase; letter-spacing: 0.05em;
 }
 .stat-box .num.win { color: var(--gain); }
 .stat-box .num.loss { color: var(--loss); }
 .pnl-box {
-  background: var(--paper-alt); border: 1px solid var(--line-strong); border-radius: 6px;
-  padding: 16px; text-align: center; margin-bottom: 24px;
+  background: linear-gradient(155deg, var(--paper) 0%, var(--paper-alt) 100%);
+  border: 1px solid var(--line-strong); border-radius: 8px;
+  padding: 18px; text-align: center; margin-bottom: 26px;
 }
-.pnl-box .num { font-family: var(--serif); font-size: 1.8rem; font-weight: 700; }
-.pnl-box .lbl { font-size: 0.68rem; color: var(--ink-dim); margin-top: 4px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.05em; }
+.pnl-box .num { font-family: var(--serif); font-size: 1.9rem; font-weight: 700; }
+.pnl-box .lbl { font-size: 0.68rem; color: var(--ink-dim); margin-top: 5px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.05em; }
 
 .trade-card {
-  background: var(--paper); border: 1px solid var(--line); border-radius: 6px;
-  padding: 14px 18px; margin-bottom: 12px;
+  background: linear-gradient(155deg, var(--paper) 0%, var(--paper-alt) 100%);
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: 16px 20px; margin-bottom: 14px;
 }
 .trade-card .row1 { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-.trade-card .ticker { font-family: var(--serif); font-weight: 700; font-size: 1.05rem; }
+.trade-card .ticker { font-family: var(--serif); font-weight: 700; font-size: 1.08rem; }
 .trade-card .dates { color: var(--ink-dim); font-size: 0.76rem; margin-top: 4px; font-family: var(--mono); }
 .trade-card .prices {
   display: flex; gap: 16px; font-size: 0.85rem; margin-top: 10px; padding-top: 10px;
   border-top: 1px solid var(--line); color: var(--ink-dim); font-family: var(--mono);
 }
 .trade-card .prices b { color: var(--ink); font-family: var(--serif); font-weight: 700; }
-.trade-card .pnl { font-size: 0.92rem; font-weight: 700; margin-top: 8px; font-family: var(--serif); }
+.trade-card .pnl { font-size: 0.94rem; font-weight: 700; margin-top: 8px; font-family: var(--serif); }
 .trade-card .pnl.pos { color: var(--gain); } .trade-card .pnl.neg { color: var(--loss); }
 </style>
 </head>
@@ -195,65 +226,63 @@ table.hist a { color: var(--saffron); text-decoration: none; font-family: var(--
 <header>
   <div class="eyebrow">Indian Equity &middot; Swing Desk</div>
   <h1>The Daily Ledger</h1>
-  <div class="meta">2026-08-16 &middot; 2026-08-16 06:35 IST (source: yfinance, end-of-day data, not live intraday)</div>
+  <div class="meta">2026-08-16 &middot; 2026-08-16 20:13 IST (source: yfinance, end-of-day data, not live intraday)</div>
 </header>
 <div class="container">
 
   <div class="section">
     <h2>Market Regime</h2>
     <div class="regime-line">
-      <span class="badge GREEN"><span class="dot"></span> GREEN</span>
+      <span class="badge YELLOW"><span class="dot"></span> YELLOW</span>
       <span class="meta" style="font-family:var(--mono); color:var(--ink-dim); font-size:0.8rem;">Medium confidence</span>
     </div>
-    <ul class="reasons"><li>NIFTY (24366) is above its 50-DMA (24039).</li><li>NIFTY is below its 200-DMA (24760) — long-term trend impaired.</li><li>50-DMA is rising.</li><li>Breadth: 55% of tracked universe above their 50-DMA.</li><li>20-day annualised volatility is moderate (11.7%).</li></ul>
+    <ul class="reasons"><li>NIFTY (24366) is above its 50-DMA (24039).</li><li>NIFTY is below its 200-DMA (24760) — long-term trend impaired.</li><li>50-DMA is rising.</li><li>Breadth: 47% of tracked universe above their 50-DMA.</li><li>20-day annualised volatility is moderate (11.7%).</li></ul>
   </div>
 
   <div class="section">
     <h2>Sector Leaders</h2>
-    <div class="sector-row"><span class="rank">1.</span><span class="name">IT</span><span class="ret neg">+nan%</span></div><div class="sector-row"><span class="rank">2.</span><span class="name">Auto</span><span class="ret pos">+9.6%</span></div><div class="sector-row"><span class="rank">3.</span><span class="name">Metals &amp; Mining</span><span class="ret pos">+3.5%</span></div><div class="sector-row"><span class="rank">4.</span><span class="name">Capital Goods &amp; Infra</span><span class="ret neg">+nan%</span></div><div class="sector-row"><span class="rank">5.</span><span class="name">Consumer Durables &amp; Retail</span><span class="ret pos">+5.2%</span></div>
+    <div class="sector-row"><div class="bar pos" style="width:100%;"></div><span class="rank">1.</span><span class="name">IT</span><span class="ret pos">+9.0%</span></div><div class="sector-row"><div class="bar pos" style="width:94%;"></div><span class="rank">2.</span><span class="name">Auto</span><span class="ret pos">+8.4%</span></div><div class="sector-row"><div class="bar pos" style="width:52%;"></div><span class="rank">3.</span><span class="name">Consumer Durables &amp; Retail</span><span class="ret pos">+4.7%</span></div><div class="sector-row"><div class="bar pos" style="width:38%;"></div><span class="rank">4.</span><span class="name">Metals &amp; Mining</span><span class="ret pos">+3.4%</span></div><div class="sector-row"><div class="bar pos" style="width:37%;"></div><span class="rank">5.</span><span class="name">Telecom</span><span class="ret pos">+3.4%</span></div>
   </div>
 
   <div class="section">
     <h2>Actionable Trades</h2>
     
-<div class="card">
+<div class="card setup-trend-pullback">
   <div class="card-top">
     <div>
-      <span class="name">LT</span>
-      <div class="score">84 / 100</div>
+      <span class="name">TECHM</span>
+      <div class="score tier-a">82 / 100</div>
     </div>
     <span class="stamp ACTIONABLE">Actionable</span>
   </div>
-  <div class="setup-line">Trend Pullback &middot; Capital Goods &amp; Infra</div>
+  <div class="setup-line">Trend Pullback &middot; IT</div>
   <div class="figblock">
-    <div class="figline"><span class="label">Entry</span><span class="value">₹4077.28</span></div>
-    <div class="figline"><span class="label">Stop</span><span class="value">₹3901.48</span></div>
-    <div class="figline"><span class="label">Target</span><span class="value">₹4464.04</span></div>
+    <div class="figline"><span class="label">Entry</span><span class="value">₹1640.96</span></div>
+    <div class="figline"><span class="label">Stop</span><span class="value">₹1576.77</span></div>
     <div class="figline"><span class="label">Reward : Risk</span><span class="value">2.2</span></div>
-    <div class="figline"><span class="label">Quantity</span><span class="value">5</span></div>
-    <div class="figline"><span class="label">Capital deployed</span><span class="value">₹20386.4</span></div>
-    <div class="figline"><span class="label">Max loss</span><span class="value">₹879.0</span></div>
+    <div class="figline"><span class="label">Quantity</span><span class="value">12</span></div>
+    <div class="figline"><span class="label">Capital deployed</span><span class="value">₹19691.52</span></div>
+    <div class="figline"><span class="label">Max loss</span><span class="value">₹770.28</span></div>
     <div class="figline"><span class="label">Holding period</span><span class="value">2–20 sessions</span></div>
   </div>
-  <ul class="notes"><li>Pullback toward 50-DMA in an established uptrend.</li></ul>
+  <ul class="notes"><li>Pullback toward 20-DMA in an established uptrend.</li></ul>
 </div>
-<div class="card">
+<div class="card setup-trend-pullback">
   <div class="card-top">
     <div>
-      <span class="name">BAJAJFINSV</span>
-      <div class="score">79 / 100</div>
+      <span class="name">TCS</span>
+      <div class="score tier-b">77 / 100</div>
     </div>
     <span class="stamp ACTIONABLE">Actionable</span>
   </div>
-  <div class="setup-line">Trend Pullback &middot; Banking &amp; Financials</div>
+  <div class="setup-line">Trend Pullback &middot; IT</div>
   <div class="figblock">
-    <div class="figline"><span class="label">Entry</span><span class="value">₹2018.34</span></div>
-    <div class="figline"><span class="label">Stop</span><span class="value">₹1930.37</span></div>
-    <div class="figline"><span class="label">Target</span><span class="value">₹2211.87</span></div>
+    <div class="figline"><span class="label">Entry</span><span class="value">₹2372.8</span></div>
+    <div class="figline"><span class="label">Stop</span><span class="value">₹2306.14</span></div>
     <div class="figline"><span class="label">Reward : Risk</span><span class="value">2.2</span></div>
-    <div class="figline"><span class="label">Quantity</span><span class="value">10</span></div>
-    <div class="figline"><span class="label">Capital deployed</span><span class="value">₹20183.4</span></div>
-    <div class="figline"><span class="label">Max loss</span><span class="value">₹879.7</span></div>
+    <div class="figline"><span class="label">Quantity</span><span class="value">8</span></div>
+    <div class="figline"><span class="label">Capital deployed</span><span class="value">₹18982.4</span></div>
+    <div class="figline"><span class="label">Max loss</span><span class="value">₹533.28</span></div>
     <div class="figline"><span class="label">Holding period</span><span class="value">2–20 sessions</span></div>
   </div>
   <ul class="notes"><li>Pullback toward 20-DMA in an established uptrend.</li></ul>
@@ -265,71 +294,15 @@ table.hist a { color: var(--saffron); text-decoration: none; font-family: var(--
     
 <div class="watch-item">
   <div class="watch-left">
-    <div class="name">TCS</div>
-    <div class="detail">Trend Pullback &middot; score 77 &middot; trigger ₹2372.8 &middot; invalidation ₹2303.18</div>
+    <div class="name">LT</div>
+    <div class="detail">Trend Pullback &middot; score 76 &middot; trigger ₹4077.28 &middot; invalidation ₹3901.48</div>
   </div>
   <span class="stamp WATCH">Watch</span>
 </div>
 <div class="watch-item">
   <div class="watch-left">
-    <div class="name">MARUTI</div>
-    <div class="detail">Trend Pullback &middot; score 76 &middot; trigger ₹13903.17 &middot; invalidation ₹13439.27</div>
-  </div>
-  <span class="stamp WATCH">Watch</span>
-</div>
-<div class="watch-item">
-  <div class="watch-left">
-    <div class="name">CIPLA</div>
-    <div class="detail">Trend Pullback &middot; score 74 &middot; trigger ₹1457.25 &middot; invalidation ₹1413.61</div>
-  </div>
-  <span class="stamp WATCH">Watch</span>
-</div>
-<div class="watch-item">
-  <div class="watch-left">
-    <div class="name">AUROPHARMA</div>
-    <div class="detail">Trend Pullback &middot; score 74 &middot; trigger ₹1630.21 &middot; invalidation ₹1551.88</div>
-  </div>
-  <span class="stamp WATCH">Watch</span>
-</div>
-<div class="watch-item">
-  <div class="watch-left">
-    <div class="name">TORNTPHARM</div>
-    <div class="detail">Trend Pullback &middot; score 74 &middot; trigger ₹4857.16 &middot; invalidation ₹4660.14</div>
-  </div>
-  <span class="stamp WATCH">Watch</span>
-</div>
-<div class="watch-item">
-  <div class="watch-left">
-    <div class="name">SBIN</div>
-    <div class="detail">Trend Pullback &middot; score 73 &middot; trigger ₹1073.04 &middot; invalidation ₹1021.4</div>
-  </div>
-  <span class="stamp WATCH">Watch</span>
-</div>
-<div class="watch-item">
-  <div class="watch-left">
-    <div class="name">BAJFINANCE</div>
-    <div class="detail">Trend Pullback &middot; score 73 &middot; trigger ₹1092.44 &middot; invalidation ₹1059.97</div>
-  </div>
-  <span class="stamp WATCH">Watch</span>
-</div>
-<div class="watch-item">
-  <div class="watch-left">
-    <div class="name">NESTLEIND</div>
-    <div class="detail">Trend Pullback &middot; score 72 &middot; trigger ₹1506.6 &middot; invalidation ₹1459.31</div>
-  </div>
-  <span class="stamp WATCH">Watch</span>
-</div>
-<div class="watch-item">
-  <div class="watch-left">
-    <div class="name">MARICO</div>
-    <div class="detail">Trend Pullback &middot; score 72 &middot; trigger ₹869.53 &middot; invalidation ₹841.36</div>
-  </div>
-  <span class="stamp WATCH">Watch</span>
-</div>
-<div class="watch-item">
-  <div class="watch-left">
-    <div class="name">GAIL</div>
-    <div class="detail">Trend Pullback &middot; score 71 &middot; trigger ₹175.77 &middot; invalidation ₹170.27</div>
+    <div class="name">BAJAJFINSV</div>
+    <div class="detail">Trend Pullback &middot; score 73 &middot; trigger ₹2018.34 &middot; invalidation ₹1930.37</div>
   </div>
   <span class="stamp WATCH">Watch</span>
 </div>
@@ -340,36 +313,36 @@ table.hist a { color: var(--saffron); text-decoration: none; font-family: var(--
     
 <div class="reject-item">
   <div class="reject-left">
-    <div class="name">SUNPHARMA</div>
+    <div class="name">MARUTI</div>
     <div class="detail">score 70</div>
   </div>
   <span class="stamp REJECT">Reject</span>
 </div>
 <div class="reject-item">
   <div class="reject-left">
-    <div class="name">IDEA</div>
-    <div class="detail">score 70</div>
-  </div>
-  <span class="stamp REJECT">Reject</span>
-</div>
-<div class="reject-item">
-  <div class="reject-left">
-    <div class="name">ICICIBANK</div>
+    <div class="name">CIPLA</div>
     <div class="detail">score 68</div>
   </div>
   <span class="stamp REJECT">Reject</span>
 </div>
 <div class="reject-item">
   <div class="reject-left">
-    <div class="name">INDUSINDBK</div>
-    <div class="detail">score 68</div>
+    <div class="name">SBIN</div>
+    <div class="detail">score 67</div>
   </div>
   <span class="stamp REJECT">Reject</span>
 </div>
 <div class="reject-item">
   <div class="reject-left">
     <div class="name">DEEPAKNTR</div>
-    <div class="detail">score 68</div>
+    <div class="detail">score 66</div>
+  </div>
+  <span class="stamp REJECT">Reject</span>
+</div>
+<div class="reject-item">
+  <div class="reject-left">
+    <div class="name">IDEA</div>
+    <div class="detail">score 65</div>
   </div>
   <span class="stamp REJECT">Reject</span>
 </div>

@@ -46,5 +46,21 @@
     "date_closed": null,
     "exit_price": null,
     "pnl": null
+  },
+  {
+    "ticker": "TCS.NS",
+    "sector": "IT",
+    "setup": "Trend Pullback",
+    "score": 76.8,
+    "date_added": "2026-08-16",
+    "entry": 2372.8,
+    "stop": 2306.14,
+    "target": 2519.45,
+    "qty": 8,
+    "capital_deployed": 18982.4,
+    "status": "OPEN",
+    "date_closed": null,
+    "exit_price": null,
+    "pnl": null
   }
 ]
