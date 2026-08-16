@@ -30,5 +30,21 @@
     "date_closed": null,
     "exit_price": null,
     "pnl": null
+  },
+  {
+    "ticker": "LT.NS",
+    "sector": "Capital Goods & Infra",
+    "setup": "Trend Pullback",
+    "score": 84.0,
+    "date_added": "2026-08-16",
+    "entry": 4077.28,
+    "stop": 3901.48,
+    "target": 4464.04,
+    "qty": 5,
+    "capital_deployed": 20386.4,
+    "status": "OPEN",
+    "date_closed": null,
+    "exit_price": null,
+    "pnl": null
   }
 ]
