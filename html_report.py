@@ -389,3 +389,108 @@ def build_html(regime: dict, sector_ranking: list, buckets: dict, data_ts: str) 
 </div>
 </body>
 </html>"""
+def build_trades_html(log: list, stats: dict) -> str:
+    """Renders the full trade record page: summary stats + a card per trade,
+    newest first."""
+    def badge(status):
+        labels = {"OPEN": "Open", "TARGET_HIT": "Target Hit", "STOP_HIT": "Stop Hit", "EXPIRED": "Expired"}
+        return f'<span class="stamp {status}">{labels.get(status, status)}</span>'
+
+    win_rate_txt = f"{stats['win_rate']}%" if stats["win_rate"] is not None else "—"
+    pnl_cls = "win" if stats["total_pnl"] > 0 else ("loss" if stats["total_pnl"] < 0 else "")
+
+    stat_html = f"""
+<div class="stat-grid">
+  <div class="stat-box"><div class="num">{stats['total']}</div><div class="lbl">Entries</div></div>
+  <div class="stat-box"><div class="num">{stats['open']}</div><div class="lbl">Open</div></div>
+  <div class="stat-box"><div class="num win">{stats['target_hit']}</div><div class="lbl">Target Hit</div></div>
+  <div class="stat-box"><div class="num loss">{stats['stop_hit']}</div><div class="lbl">Stop Hit</div></div>
+  <div class="stat-box"><div class="num">{stats['expired']}</div><div class="lbl">Expired</div></div>
+  <div class="stat-box"><div class="num">{win_rate_txt}</div><div class="lbl">Win Rate</div></div>
+</div>
+<div class="pnl-box">
+  <div class="num {pnl_cls}">₹{stats['total_pnl']}</div><div class="lbl">Net Position &middot; Closed Entries</div>
+</div>
+"""
+
+    if not log:
+        cards_html = '<p class="empty">The ledger is empty — entries appear once the first actionable trade is issued.</p>'
+    else:
+        cards = []
+        for t in sorted(log, key=lambda x: x["date_added"], reverse=True):
+            pnl_line = ""
+            if t["pnl"] is not None:
+                cls = "pos" if t["pnl"] >= 0 else "neg"
+                pnl_line = f'<div class="pnl {cls}">P&amp;L ₹{t["pnl"]:+.2f}</div>'
+            closed_line = f' &middot; closed {_esc(t["date_closed"])}' if t.get("date_closed") else ""
+            cards.append(f"""
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">{_esc(t['ticker'].replace('.NS',''))}</span>
+    {badge(t['status'])}
+  </div>
+  <div class="dates">{_esc(t['setup'])} &middot; given {_esc(t['date_added'])}{closed_line}</div>
+  <div class="prices">
+    <span>Entry <b>₹{t['entry']}</b></span>
+    <span>Stop <b>₹{t['stop']}</b></span>
+    <span>Target <b>₹{t['target']}</b></span>
+  </div>
+  {pnl_line}
+</div>""")
+        cards_html = "".join(cards)
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trade Ledger</title>
+<style>{STYLE}</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Indian Equity &middot; Swing Desk</div>
+  <h1>Trade Ledger</h1>
+  <div class="meta">Every actionable entry issued, and its outcome</div>
+</header>
+<div class="container">
+  <div class="section">
+    {stat_html}
+    {cards_html}
+  </div>
+  <div class="history-link"><a href="index.html">&larr; Back to latest report</a></div>
+</div>
+</body>
+</html>"""
+
+
+def build_history_index(report_dates: list) -> str:
+    """report_dates: list of date strings (YYYY-MM-DD), newest first."""
+    rows = "".join(
+        f'<tr><td>{_esc(d)}</td><td><a href="{_esc(d)}.html">Open &rarr;</a></td></tr>'
+        for d in report_dates
+    )
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Report Register</title>
+<style>{STYLE}</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Indian Equity &middot; Swing Desk</div>
+  <h1>Report Register</h1>
+</header>
+<div class="container">
+  <div class="section">
+    <table class="hist">
+      <tr><th>Date</th><th></th></tr>
+      {rows if rows else '<tr><td colspan="2" class="empty">No reports yet.</td></tr>'}
+    </table>
+  </div>
+  <div class="history-link"><a href="../index.html">&larr; Back to latest report</a></div>
+</div>
+</body>
+</html>"""
