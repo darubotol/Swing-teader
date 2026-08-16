@@ -11,113 +11,189 @@ import html as html_lib
 
 STYLE = """
 :root {
-  --bg: #0f1115; --card: #171a21; --border: #262b36;
-  --text: #e8eaed; --muted: #9aa3b2;
-  --green: #2fbf71; --yellow: #e0a72e; --red: #e0524e;
-  --accent: #4f8cff;
+  --bg: #0b0e14; --paper: #12161f; --paper-alt: #171b27;
+  --line: #262c3a; --line-strong: #3a4256;
+  --ink: #ece8dd; --ink-dim: #8891a3;
+  --saffron: #de8c3e; --saffron-dim: rgba(222,140,62,.14);
+  --gain: #52a97c; --gain-dim: rgba(82,169,124,.14);
+  --loss: #c8564f; --loss-dim: rgba(200,86,79,.14);
+  --info: #6c8ee0; --info-dim: rgba(108,142,224,.14);
+  --muted-badge: rgba(136,145,163,.16);
+  --serif: Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", ui-serif, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "Courier New", monospace;
 }
 * { box-sizing: border-box; }
 body {
-  margin: 0; padding: 0 0 40px 0;
-  background: var(--bg); color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  font-size: 16px; line-height: 1.5;
+  margin: 0; padding: 0 0 48px 0;
+  background: var(--bg); color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px; line-height: 1.55;
 }
 header {
-  padding: 20px 16px 14px; border-bottom: 1px solid var(--border);
+  padding: 24px 20px 16px; border-bottom: 3px double var(--line-strong);
   position: sticky; top: 0; background: var(--bg); z-index: 10;
 }
-header h1 { font-size: 1.25rem; margin: 0 0 4px; }
-header .meta { color: var(--muted); font-size: 0.85rem; }
-.container { max-width: 720px; margin: 0 auto; padding: 0 16px; }
-.section { margin-top: 24px; }
+header .eyebrow {
+  font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+  color: var(--saffron); text-transform: uppercase; margin-bottom: 6px;
+}
+header h1 {
+  font-family: var(--serif); font-size: 1.5rem; font-weight: 700;
+  letter-spacing: 0.01em; margin: 0 0 6px; color: var(--ink);
+}
+header .meta {
+  color: var(--ink-dim); font-size: 0.78rem; font-family: var(--mono);
+}
+.container { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+.section { margin-top: 30px; }
 .section h2 {
-  font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.04em;
-  color: var(--muted); margin: 0 0 10px; padding-bottom: 6px;
-  border-bottom: 1px solid var(--border);
+  font-family: var(--serif); font-style: italic; font-weight: 400;
+  font-size: 1.02rem; color: var(--ink); margin: 0 0 14px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--line); letter-spacing: 0.01em;
 }
 .badge {
-  display: inline-block; padding: 3px 10px; border-radius: 999px;
-  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.02em;
+  display: inline-block; padding: 4px 12px; border-radius: 3px;
+  font-family: var(--mono); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; border: 1px solid transparent;
 }
-.badge.GREEN { background: rgba(47,191,113,0.15); color: var(--green); }
-.badge.YELLOW { background: rgba(224,167,46,0.15); color: var(--yellow); }
-.badge.RED { background: rgba(224,82,78,0.15); color: var(--red); }
-.badge.ACTIONABLE { background: rgba(47,191,113,0.15); color: var(--green); }
-.badge.WATCH { background: rgba(224,167,46,0.15); color: var(--yellow); }
-.badge.REJECT { background: rgba(224,82,78,0.12); color: var(--red); }
-.regime-line { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-ul.reasons { margin: 8px 0 0; padding-left: 18px; color: var(--muted); font-size: 0.92rem; }
-ul.reasons li { margin-bottom: 4px; }
+.badge.GREEN { background: var(--gain-dim); color: var(--gain); border-color: rgba(82,169,124,.35); }
+.badge.YELLOW { background: var(--saffron-dim); color: var(--saffron); border-color: rgba(222,140,62,.35); }
+.badge.RED { background: var(--loss-dim); color: var(--loss); border-color: rgba(200,86,79,.35); }
+
+/* Stamp-style status badges — rotated, double-ring, ledger-approval feel */
+.stamp {
+  display: inline-block; padding: 5px 11px; border-radius: 4px;
+  font-family: var(--mono); font-size: 0.66rem; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; border: 1.5px solid currentColor; transform: rotate(-2.5deg);
+  position: relative;
+}
+.stamp::after {
+  content: ""; position: absolute; inset: 2px; border: 1px solid currentColor;
+  border-radius: 2px; opacity: 0.5; pointer-events: none;
+}
+.stamp.ACTIONABLE, .stamp.TARGET_HIT { color: var(--gain); background: var(--gain-dim); }
+.stamp.WATCH, .stamp.OPEN { color: var(--info); background: var(--info-dim); }
+.stamp.REJECT, .stamp.STOP_HIT { color: var(--loss); background: var(--loss-dim); }
+.stamp.EXPIRED { color: var(--ink-dim); background: var(--muted-badge); }
+
+.regime-line { display: flex; align-items: center; margin-bottom: 12px; }
+.regime-line .badge { margin-right: 12px; }
+.regime-line .dot {
+  width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex-shrink: 0;
+  display: inline-block; margin-right: 6px;
+}
+ul.reasons { margin: 8px 0 0; padding-left: 0; list-style: none; color: var(--ink-dim); font-size: 0.92rem; }
+ul.reasons li { margin-bottom: 6px; padding-left: 16px; position: relative; }
+ul.reasons li::before { content: "—"; position: absolute; left: 0; color: var(--line-strong); }
+
 .sector-row {
-  display: flex; justify-content: space-between; padding: 8px 0;
-  border-bottom: 1px solid var(--border); font-size: 0.95rem;
+  display: flex; align-items: baseline; gap: 10px; padding: 9px 0;
+  border-bottom: 1px solid var(--line); font-size: 0.95rem;
 }
 .sector-row:last-child { border-bottom: none; }
-.sector-row .rank { color: var(--muted); width: 22px; flex-shrink: 0; }
-.sector-row .ret.pos { color: var(--green); }
-.sector-row .ret.neg { color: var(--red); }
+.sector-row .rank {
+  font-family: var(--serif); color: var(--ink-dim); width: 20px; flex-shrink: 0; font-size: 0.9rem;
+}
+.sector-row .name { flex: 1; }
+.sector-row .ret { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 600; }
+.sector-row .ret.pos { color: var(--gain); }
+.sector-row .ret.neg { color: var(--loss); }
+
 .card {
-  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
-  padding: 14px 16px; margin-bottom: 12px;
+  background: var(--paper); border: 1px solid var(--line); border-top: 2px solid var(--saffron);
+  border-radius: 6px; padding: 16px 18px; margin-bottom: 14px;
 }
-.card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.card-top .name { font-size: 1.05rem; font-weight: 700; }
-.card-top .score { color: var(--muted); font-size: 0.85rem; }
-.card .setup-line { color: var(--muted); font-size: 0.85rem; margin-bottom: 10px; }
-.grid2 {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; font-size: 0.92rem; margin-bottom: 8px;
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
+.card-top .name { font-family: var(--serif); font-size: 1.15rem; font-weight: 700; }
+.card-top .score { color: var(--ink-dim); font-size: 0.78rem; font-family: var(--mono); margin-top: 3px; }
+.card .setup-line { color: var(--ink-dim); font-size: 0.82rem; font-family: var(--mono); margin-bottom: 12px; }
+.figline {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 5px 0; font-size: 0.92rem; border-bottom: 1px solid var(--line);
 }
-.grid2 .label { color: var(--muted); }
-.grid2 .value { text-align: right; font-variant-numeric: tabular-nums; }
-.notes { margin: 8px 0 0; padding-left: 18px; font-size: 0.88rem; color: var(--muted); }
+.figline:last-child { border-bottom: none; }
+.figline .label { color: var(--ink-dim); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.figline .value { font-family: var(--serif); font-variant-numeric: tabular-nums; font-weight: 700; }
+.figblock { margin-bottom: 10px; padding-top: 8px; border-top: 1px solid var(--line); }
+.notes { margin: 10px 0 0; padding-left: 0; list-style: none; font-size: 0.85rem; color: var(--ink-dim); font-style: italic; }
+.notes li { padding-left: 14px; position: relative; }
+.notes li::before { content: "❧"; position: absolute; left: 0; color: var(--saffron); font-style: normal; }
+
 .watch-item, .reject-item {
-  padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.92rem;
+  padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 0.92rem;
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
 }
 .watch-item:last-child, .reject-item:last-child { border-bottom: none; }
-.watch-item .name, .reject-item .name { font-weight: 600; }
-.watch-item .detail, .reject-item .detail { color: var(--muted); font-size: 0.85rem; margin-top: 2px; }
-.empty { color: var(--muted); font-style: italic; font-size: 0.92rem; }
+.watch-item .name, .reject-item .name { font-family: var(--serif); font-weight: 700; }
+.watch-item .detail, .reject-item .detail { color: var(--ink-dim); font-size: 0.78rem; margin-top: 3px; font-family: var(--mono); }
+.watch-left, .reject-left { flex: 1; }
+
+.empty {
+  color: var(--ink-dim); font-style: italic; font-size: 0.92rem; font-family: var(--serif);
+  padding: 14px 0;
+}
+
 .decision {
-  font-size: 1.05rem; font-weight: 700; text-align: center;
-  padding: 16px; border-radius: 12px; background: var(--card); border: 1px solid var(--border);
+  font-family: var(--serif); font-size: 1.1rem; font-weight: 700; text-align: center;
+  padding: 18px; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong);
+  letter-spacing: 0.02em;
 }
+.decision .tick { color: var(--saffron); }
+
 .warning {
-  margin-top: 28px; padding: 14px 16px; border-radius: 12px;
-  background: rgba(224,167,46,0.08); border: 1px solid rgba(224,167,46,0.3);
-  color: var(--muted); font-size: 0.85rem;
+  margin-top: 30px; padding: 14px 16px; border-radius: 6px;
+  background: var(--paper-alt); border-left: 3px solid var(--saffron);
+  color: var(--ink-dim); font-size: 0.82rem; font-family: var(--mono); line-height: 1.6;
 }
-.history-link { display: block; margin-top: 20px; text-align: center; }
-.history-link a { color: var(--accent); text-decoration: none; font-size: 0.9rem; }
+
+.history-link { display: block; margin-top: 22px; text-align: center; }
+.history-link a {
+  color: var(--saffron); text-decoration: none; font-size: 0.85rem;
+  font-family: var(--mono); letter-spacing: 0.03em;
+}
 table.hist { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-table.hist td, table.hist th { padding: 8px 6px; border-bottom: 1px solid var(--border); text-align: left; }
-table.hist a { color: var(--accent); text-decoration: none; }
-.stat-grid {
-  display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px;
+table.hist th {
+  font-family: var(--mono); text-transform: uppercase; font-size: 0.7rem;
+  letter-spacing: 0.06em; color: var(--ink-dim); text-align: left; padding: 8px 6px;
+  border-bottom: 1px solid var(--line-strong);
 }
+table.hist td { padding: 10px 6px; border-bottom: 1px solid var(--line); font-family: var(--serif); }
+table.hist a { color: var(--saffron); text-decoration: none; font-family: var(--mono); font-size: 0.82rem; }
+
+.stat-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
 .stat-box {
-  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-  padding: 12px 8px; text-align: center; flex: 1 1 30%; min-width: 90px;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 6px;
+  padding: 14px 8px; text-align: center; flex: 1 1 30%; min-width: 90px;
 }
-.stat-box .num { font-size: 1.3rem; font-weight: 700; }
-.stat-box .lbl { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
-.stat-box .num.win { color: var(--green); }
-.stat-box .num.loss { color: var(--red); }
+.stat-box .num { font-family: var(--serif); font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.stat-box .lbl {
+  font-size: 0.65rem; color: var(--ink-dim); margin-top: 4px; font-family: var(--mono);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.stat-box .num.win { color: var(--gain); }
+.stat-box .num.loss { color: var(--loss); }
+.pnl-box {
+  background: var(--paper-alt); border: 1px solid var(--line-strong); border-radius: 6px;
+  padding: 16px; text-align: center; margin-bottom: 24px;
+}
+.pnl-box .num { font-family: var(--serif); font-size: 1.8rem; font-weight: 700; }
+.pnl-box .lbl { font-size: 0.68rem; color: var(--ink-dim); margin-top: 4px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.05em; }
+
 .trade-card {
-  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
-  padding: 12px 16px; margin-bottom: 10px;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 6px;
+  padding: 14px 18px; margin-bottom: 12px;
 }
-.trade-card .row1 { display: flex; justify-content: space-between; align-items: center; }
-.trade-card .ticker { font-weight: 700; }
-.trade-card .dates { color: var(--muted); font-size: 0.78rem; margin-top: 2px; }
-.trade-card .prices { display: flex; gap: 14px; font-size: 0.85rem; margin-top: 8px; color: var(--muted); }
-.trade-card .prices b { color: var(--text); font-weight: 600; }
-.trade-card .pnl { font-size: 0.9rem; font-weight: 700; margin-top: 6px; }
-.trade-card .pnl.pos { color: var(--green); } .trade-card .pnl.neg { color: var(--red); }
-.badge.OPEN { background: rgba(79,140,255,.15); color: var(--accent); }
-.badge.TARGET_HIT { background: rgba(47,191,113,.15); color: var(--green); }
-.badge.STOP_HIT { background: rgba(224,82,78,.15); color: var(--red); }
-.badge.EXPIRED { background: rgba(154,163,178,.15); color: var(--muted); }
+.trade-card .row1 { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.trade-card .ticker { font-family: var(--serif); font-weight: 700; font-size: 1.05rem; }
+.trade-card .dates { color: var(--ink-dim); font-size: 0.76rem; margin-top: 4px; font-family: var(--mono); }
+.trade-card .prices {
+  display: flex; gap: 16px; font-size: 0.85rem; margin-top: 10px; padding-top: 10px;
+  border-top: 1px solid var(--line); color: var(--ink-dim); font-family: var(--mono);
+}
+.trade-card .prices b { color: var(--ink); font-family: var(--serif); font-weight: 700; }
+.trade-card .pnl { font-size: 0.92rem; font-weight: 700; margin-top: 8px; font-family: var(--serif); }
+.trade-card .pnl.pos { color: var(--gain); } .trade-card .pnl.neg { color: var(--loss); }
 """
 
 
@@ -129,7 +205,7 @@ def _score_bucket_html(bucket_key, buckets):
     items = buckets.get(bucket_key, [])
     if bucket_key == "actionable":
         if not items:
-            return '<p class="empty">No trades met the ACTIONABLE bar today.</p>'
+            return '<p class="empty">No entries clear the ledger threshold today.</p>'
         cards = []
         for s in items:
             info, pos, score = s["info"], s["position"], s["score"]
@@ -138,19 +214,22 @@ def _score_bucket_html(bucket_key, buckets):
             cards.append(f"""
 <div class="card">
   <div class="card-top">
-    <span class="name">{name}</span>
-    <span class="score">{score['total']:.0f}/100</span>
+    <div>
+      <span class="name">{name}</span>
+      <div class="score">{score['total']:.0f} / 100</div>
+    </div>
+    <span class="stamp ACTIONABLE">Actionable</span>
   </div>
   <div class="setup-line">{_esc(info['setup'])} &middot; {_esc(info['sector'])}</div>
-  <div class="grid2">
-    <div class="label">Entry</div><div class="value">₹{info['entry']}</div>
-    <div class="label">Stop</div><div class="value">₹{info['stop']}</div>
-    <div class="label">Target</div><div class="value">₹{info['target']}</div>
-    <div class="label">Reward:Risk</div><div class="value">{pos['reward_risk']}</div>
-    <div class="label">Qty</div><div class="value">{pos['qty']}</div>
-    <div class="label">Capital deployed</div><div class="value">₹{pos['capital_deployed']}</div>
-    <div class="label">Max loss</div><div class="value">₹{pos['max_loss']}</div>
-    <div class="label">Holding period</div><div class="value">2–20 sessions</div>
+  <div class="figblock">
+    <div class="figline"><span class="label">Entry</span><span class="value">₹{info['entry']}</span></div>
+    <div class="figline"><span class="label">Stop</span><span class="value">₹{info['stop']}</span></div>
+    <div class="figline"><span class="label">Target</span><span class="value">₹{info['target']}</span></div>
+    <div class="figline"><span class="label">Reward : Risk</span><span class="value">{pos['reward_risk']}</span></div>
+    <div class="figline"><span class="label">Quantity</span><span class="value">{pos['qty']}</span></div>
+    <div class="figline"><span class="label">Capital deployed</span><span class="value">₹{pos['capital_deployed']}</span></div>
+    <div class="figline"><span class="label">Max loss</span><span class="value">₹{pos['max_loss']}</span></div>
+    <div class="figline"><span class="label">Holding period</span><span class="value">2–20 sessions</span></div>
   </div>
   <ul class="notes">{notes}</ul>
 </div>""")
@@ -158,28 +237,34 @@ def _score_bucket_html(bucket_key, buckets):
 
     if bucket_key == "watch":
         if not items:
-            return '<p class="empty">None.</p>'
+            return '<p class="empty">Nothing pending entry right now.</p>'
         rows = []
         for s in items[:10]:
             info = s["info"]
             rows.append(f"""
 <div class="watch-item">
-  <div class="name">{_esc(info['ticker'].replace('.NS',''))} <span class="badge WATCH">WATCH</span></div>
-  <div class="detail">{_esc(info['setup'])} &middot; score {s['score']['total']:.0f} &middot; trigger ₹{info['entry']} &middot; invalidation ₹{info['stop']}</div>
+  <div class="watch-left">
+    <div class="name">{_esc(info['ticker'].replace('.NS',''))}</div>
+    <div class="detail">{_esc(info['setup'])} &middot; score {s['score']['total']:.0f} &middot; trigger ₹{info['entry']} &middot; invalidation ₹{info['stop']}</div>
+  </div>
+  <span class="stamp WATCH">Watch</span>
 </div>""")
         return "".join(rows)
 
     if bucket_key == "reject":
         top = sorted(items, key=lambda x: x["score"]["total"], reverse=True)[:5]
         if not top:
-            return '<p class="empty">None scored high enough to be worth listing.</p>'
+            return '<p class="empty">No candidates scored high enough to record.</p>'
         rows = []
         for s in top:
             info = s["info"]
             rows.append(f"""
 <div class="reject-item">
-  <div class="name">{_esc(info['ticker'].replace('.NS',''))} <span class="badge REJECT">REJECT</span></div>
-  <div class="detail">score {s['score']['total']:.0f}</div>
+  <div class="reject-left">
+    <div class="name">{_esc(info['ticker'].replace('.NS',''))}</div>
+    <div class="detail">score {s['score']['total']:.0f}</div>
+  </div>
+  <span class="stamp REJECT">Reject</span>
 </div>""")
         return "".join(rows)
     return ""
@@ -195,7 +280,7 @@ def build_html(regime: dict, sector_ranking: list, buckets: dict, data_ts: str) 
         cls = "pos" if ret >= 0 else "neg"
         sector_rows.append(
             f'<div class="sector-row"><span class="rank">{i}.</span>'
-            f'<span>{_esc(sector)}</span><span class="ret {cls}">{ret:+.1f}%</span></div>'
+            f'<span class="name">{_esc(sector)}</span><span class="ret {cls}">{ret:+.1f}%</span></div>'
         )
     sector_html = "".join(sector_rows) if sector_rows else '<p class="empty">No sector data.</p>'
 
@@ -214,21 +299,22 @@ def build_html(regime: dict, sector_ranking: list, buckets: dict, data_ts: str) 
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Swing Report — {today}</title>
+<title>Swing Ledger — {today}</title>
 <style>{STYLE}</style>
 </head>
 <body>
 <header>
-  <h1>Indian Equity Swing Report</h1>
-  <div class="meta">{today} &middot; data: {_esc(data_ts)}</div>
+  <div class="eyebrow">Indian Equity &middot; Swing Desk</div>
+  <h1>The Daily Ledger</h1>
+  <div class="meta">{today} &middot; {_esc(data_ts)}</div>
 </header>
 <div class="container">
 
   <div class="section">
     <h2>Market Regime</h2>
     <div class="regime-line">
-      <span class="badge {regime['regime']}">{regime['regime']}</span>
-      <span class="meta">{regime['confidence']} confidence</span>
+      <span class="badge {regime['regime']}"><span class="dot"></span> {regime['regime']}</span>
+      <span class="meta" style="font-family:var(--mono); color:var(--ink-dim); font-size:0.8rem;">{regime['confidence']} confidence</span>
     </div>
     <ul class="reasons">{reasons_html}</ul>
   </div>
@@ -254,14 +340,14 @@ def build_html(regime: dict, sector_ranking: list, buckets: dict, data_ts: str) 
   </div>
 
   <div class="section">
-    <div class="decision">Final decision: {_esc(decision)}</div>
+    <div class="decision"><span class="tick">§</span> {_esc(decision)} <span class="tick">§</span></div>
   </div>
 
   <div class="warning">
     This is an analytical trading model, not a guarantee of returns. Market conditions
     can invalidate technical setups. Verify current prices, liquidity, corporate events
     and order details before trading. Fundamentals/news are not auto-checked — confirm
-    manually before entering any ACTIONABLE trade.
+    manually before entering any actionable trade.
   </div>
 
   <div class="history-link"><a href="reports/index.html">View past reports &rarr;</a></div>
@@ -275,35 +361,35 @@ def build_trades_html(log: list, stats: dict) -> str:
     """Renders the full trade record page: summary stats + a card per trade,
     newest first."""
     def badge(status):
-        labels = {"OPEN": "OPEN", "TARGET_HIT": "TARGET HIT", "STOP_HIT": "STOP HIT", "EXPIRED": "EXPIRED"}
-        return f'<span class="badge {status}">{labels.get(status, status)}</span>'
+        labels = {"OPEN": "Open", "TARGET_HIT": "Target Hit", "STOP_HIT": "Stop Hit", "EXPIRED": "Expired"}
+        return f'<span class="stamp {status}">{labels.get(status, status)}</span>'
 
     win_rate_txt = f"{stats['win_rate']}%" if stats["win_rate"] is not None else "—"
     pnl_cls = "win" if stats["total_pnl"] > 0 else ("loss" if stats["total_pnl"] < 0 else "")
 
     stat_html = f"""
 <div class="stat-grid">
-  <div class="stat-box"><div class="num">{stats['total']}</div><div class="lbl">Total trades</div></div>
+  <div class="stat-box"><div class="num">{stats['total']}</div><div class="lbl">Entries</div></div>
   <div class="stat-box"><div class="num">{stats['open']}</div><div class="lbl">Open</div></div>
-  <div class="stat-box"><div class="num win">{stats['target_hit']}</div><div class="lbl">Target hit</div></div>
-  <div class="stat-box"><div class="num loss">{stats['stop_hit']}</div><div class="lbl">Stop hit</div></div>
+  <div class="stat-box"><div class="num win">{stats['target_hit']}</div><div class="lbl">Target Hit</div></div>
+  <div class="stat-box"><div class="num loss">{stats['stop_hit']}</div><div class="lbl">Stop Hit</div></div>
   <div class="stat-box"><div class="num">{stats['expired']}</div><div class="lbl">Expired</div></div>
-  <div class="stat-box"><div class="num">{win_rate_txt}</div><div class="lbl">Win rate</div></div>
+  <div class="stat-box"><div class="num">{win_rate_txt}</div><div class="lbl">Win Rate</div></div>
 </div>
-<div class="stat-box" style="margin-bottom:20px;">
-  <div class="num {pnl_cls}">₹{stats['total_pnl']}</div><div class="lbl">Total P&amp;L (closed trades)</div>
+<div class="pnl-box">
+  <div class="num {pnl_cls}">₹{stats['total_pnl']}</div><div class="lbl">Net Position &middot; Closed Entries</div>
 </div>
 """
 
     if not log:
-        cards_html = '<p class="empty">No trades logged yet — check back after the first ACTIONABLE trade is issued.</p>'
+        cards_html = '<p class="empty">The ledger is empty — entries appear once the first actionable trade is issued.</p>'
     else:
         cards = []
         for t in sorted(log, key=lambda x: x["date_added"], reverse=True):
             pnl_line = ""
             if t["pnl"] is not None:
                 cls = "pos" if t["pnl"] >= 0 else "neg"
-                pnl_line = f'<div class="pnl {cls}">P&amp;L: ₹{t["pnl"]:+.2f}</div>'
+                pnl_line = f'<div class="pnl {cls}">P&amp;L ₹{t["pnl"]:+.2f}</div>'
             closed_line = f' &middot; closed {_esc(t["date_closed"])}' if t.get("date_closed") else ""
             cards.append(f"""
 <div class="trade-card">
@@ -326,11 +412,15 @@ def build_trades_html(log: list, stats: dict) -> str:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Trade Record</title>
+<title>Trade Ledger</title>
 <style>{STYLE}</style>
 </head>
 <body>
-<header><h1>Trade Record</h1><div class="meta">Every ACTIONABLE trade the system has issued</div></header>
+<header>
+  <div class="eyebrow">Indian Equity &middot; Swing Desk</div>
+  <h1>Trade Ledger</h1>
+  <div class="meta">Every actionable entry issued, and its outcome</div>
+</header>
 <div class="container">
   <div class="section">
     {stat_html}
@@ -345,7 +435,7 @@ def build_trades_html(log: list, stats: dict) -> str:
 def build_history_index(report_dates: list) -> str:
     """report_dates: list of date strings (YYYY-MM-DD), newest first."""
     rows = "".join(
-        f'<tr><td>{_esc(d)}</td><td><a href="{_esc(d)}.html">Open report</a></td></tr>'
+        f'<tr><td>{_esc(d)}</td><td><a href="{_esc(d)}.html">Open &rarr;</a></td></tr>'
         for d in report_dates
     )
     return f"""<!DOCTYPE html>
@@ -353,11 +443,14 @@ def build_history_index(report_dates: list) -> str:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Report History</title>
+<title>Report Register</title>
 <style>{STYLE}</style>
 </head>
 <body>
-<header><h1>Report History</h1></header>
+<header>
+  <div class="eyebrow">Indian Equity &middot; Swing Desk</div>
+  <h1>Report Register</h1>
+</header>
 <div class="container">
   <div class="section">
     <table class="hist">
@@ -365,7 +458,7 @@ def build_history_index(report_dates: list) -> str:
       {rows if rows else '<tr><td colspan="2" class="empty">No reports yet.</td></tr>'}
     </table>
   </div>
-  <div class="history-link"><a href="../index.html">← Back to latest report</a></div>
+  <div class="history-link"><a href="../index.html">&larr; Back to latest report</a></div>
 </div>
 </body>
 </html>"""
