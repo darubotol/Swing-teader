@@ -22,6 +22,8 @@ def rank_sectors(universe_data: dict, lookback: int = 20) -> list:
     """
     Rank sectors by average N-day return of their constituent stocks.
     Returns list of (sector, avg_return_pct) sorted strongest first.
+    Stocks with a NaN return (occasional Yahoo Finance data gaps) are
+    skipped rather than poisoning the sector average.
     """
     sector_returns = {}
     for sector, tickers in config.STOCK_UNIVERSE.items():
@@ -31,6 +33,8 @@ def rank_sectors(universe_data: dict, lookback: int = 20) -> list:
             if df is None or len(df) <= lookback:
                 continue
             r = (df["Close"].iloc[-1] / df["Close"].iloc[-lookback - 1] - 1) * 100
+            if r != r:  # NaN check (NaN is never equal to itself)
+                continue
             rets.append(r)
         if rets:
             sector_returns[sector] = sum(rets) / len(rets)
