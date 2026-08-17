@@ -1,0 +1,36 @@
+name: Backtest
+on:
+  workflow_dispatch: {}
+permissions:
+  contents: write
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+      - run: pip install -r requirements.txt
+      - run: python backtest.py
+        env:
+          DATA_SOURCE: yfinance
+      - name: Build backtest results page
+        run: |
+          python3 -c "
+          import json, html_report
+          with open('backtest_results.json') as f:
+              results = json.load(f)
+          page = html_report.build_backtest_html(results)
+          with open('docs/backtest.html', 'w') as f:
+              f.write(page)
+          print('docs/backtest.html written.')
+          "
+      - uses: actions/upload-artifact@v4
+        with:
+          name: backtest-results
+          path: backtest_results.json
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Backtest results
+          file_pattern: "docs/** backtest_results.json"
