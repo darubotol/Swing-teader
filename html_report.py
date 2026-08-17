@@ -208,4 +208,426 @@ table.hist a { color: var(--saffron); text-decoration: none; font-family: var(--
 .stat-box .lbl {
   font-size: 0.65rem; color: var(--ink-dim); margin-top: 5px; font-family: var(--mono);
   text-transform: uppercase; letter-spacing: 0.05em;
+}
+.stat-box .num.win { color: var(--gain); }
+.stat-box .num.loss { color: var(--loss); }
+.pnl-box {
+  background: linear-gradient(155deg, var(--paper) 0%, var(--paper-alt) 100%);
+  border: 1px solid var(--line-strong); border-radius: 8px;
+  padding: 18px; text-align: center; margin-bottom: 26px;
+}
+.pnl-box .num { font-family: var(--serif); font-size: 1.9rem; font-weight: 700; }
+.pnl-box .lbl { font-size: 0.68rem; color: var(--ink-dim); margin-top: 5px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.05em; }
+
+.trade-card {
+  background: linear-gradient(155deg, var(--paper) 0%, var(--paper-alt) 100%);
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: 16px 20px; margin-bottom: 14px;
+}
+.trade-card .row1 { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.trade-card .ticker { font-family: var(--serif); font-weight: 700; font-size: 1.08rem; }
+.trade-card .dates { color: var(--ink-dim); font-size: 0.76rem; margin-top: 4px; font-family: var(--mono); }
+.trade-card .prices {
+  display: flex; gap: 16px; font-size: 0.85rem; margin-top: 10px; padding-top: 10px;
+  border-top: 1px solid var(--line); color: var(--ink-dim); font-family: var(--mono);
+}
+.trade-card .prices b { color: var(--ink); font-family: var(--serif); font-weight: 700; }
+.trade-card .pnl { font-size: 0.94rem; font-weight: 700; margin-top: 8px; font-family: var(--serif); }
+.trade-card .pnl.pos { color: var(--gain); } .trade-card .pnl.neg { color: var(--loss); }
+
+.score-breakdown { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.score-chip {
+  font-family: var(--mono); font-size: 0.68rem; background: var(--paper-alt);
+  border: 1px solid var(--line); border-radius: 4px; padding: 3px 8px; color: var(--ink-dim);
+}
+.score-chip b { color: var(--ink); font-weight: 700; }
+"""
+
+
+def _esc(x):
+    return html_lib.escape(str(x))
+
+
+def _score_bucket_html(bucket_key, buckets):
+    items = buckets.get(bucket_key, [])
+    if bucket_key == "actionable":
+        if not items:
+            return '<p class="empty">No entries clear the ledger threshold today.</p>'
+        cards = []
+        for s in items:
+            info, pos, score = s["info"], s["position"], s["score"]
+            name = _esc(info["ticker"].replace(".NS", ""))
+            notes = "".join(f"<li>{_esc(n)}</li>" for n in info["structure_notes"])
+            setup_slug = info["setup"].lower().replace(" ", "-")
+            tier = "tier-a" if score["total"] >= 80 else "tier-b"
+            cards.append(f"""
+<div class="card setup-{setup_slug}">
+  <div class="card-top">
+    <div>
+      <span class="name">{name}</span>
+      <div class="score {tier}">{score['total']:.0f} / 100</div>
+    </div>
+    <span class="stamp ACTIONABLE">Actionable</span>
+  </div>
+  <div class="setup-line">{_esc(info['setup'])} &middot; {_esc(info['sector'])}</div>
+  <div class="score-breakdown">{"".join(f'<span class="score-chip">{SCORE_LABELS.get(k,k)} <b>{v:.0f}/{SCORE_MAX.get(k,"?")}</b></span>' for k, v in score["breakdown"].items())}</div>
+  <div class="figblock">
+    <div class="figline"><span class="label">Entry</span><span class="value">₹{info['entry']}</span></div>
+    <div class="figline"><span class="label">Stop</span><span class="value">₹{info['stop']}</span></div>
+    <div class="figline"><span class="label">Target</span><span class="value">₹{info['target']}</span></div>
+    <div class="figline"><span class="label">Reward : Risk</span><span class="value">{pos['reward_risk']}</span></div>
+    <div class="figline"><span class="label">Quantity</span><span class="value">{pos['qty']}</span></div>
+    <div class="figline"><span class="label">Capital deployed</span><span class="value">₹{pos['capital_deployed']}</span></div>
+    <div class="figline"><span class="label">Max loss</span><span class="value">₹{pos['max_loss']}</span></div>
+    <div class="figline"><span class="label">Holding period</span><span class="value">2–20 sessions</span></div>
+  </div>
+  <ul class="notes">{notes}</ul>
+</div>""")
+        return "".join(cards)
+
+    if bucket_key == "watch":
+        if not items:
+            return '<p class="empty">Nothing pending entry right now.</p>'
+        rows = []
+        for s in items[:10]:
+            info = s["info"]
+            rows.append(f"""
+<div class="watch-item">
+  <div class="watch-left">
+    <div class="name">{_esc(info['ticker'].replace('.NS',''))}</div>
+    <div class="detail">{_esc(info['setup'])} &middot; score {s['score']['total']:.0f} &middot; trigger ₹{info['entry']} &middot; invalidation ₹{info['stop']}</div>
+  </div>
+  <span class="stamp WATCH">Watch</span>
+</div>""")
+        return "".join(rows)
+
+    if bucket_key == "reject":
+        top = sorted(items, key=lambda x: x["score"]["total"], reverse=True)[:5]
+        if not top:
+            return '<p class="empty">No candidates scored high enough to record.</p>'
+        rows = []
+        for s in top:
+            info = s["info"]
+            rows.append(f"""
+<div class="reject-item">
+  <div class="reject-left">
+    <div class="name">{_esc(info['ticker'].replace('.NS',''))}</div>
+    <div class="detail">score {s['score']['total']:.0f}</div>
+  </div>
+<span class="stamp REJECT">Reject</span>
+</div>""")
+        return "".join(rows)
+    return ""
+
+
+def build_html(regime: dict, sector_ranking: list, buckets: dict, data_ts: str) -> str:
+    today = datetime.date.today().isoformat()
+
+    reasons_html = "".join(f"<li>{_esc(r)}</li>" for r in regime["reasons"])
+
+    sector_rows = []
+    top5 = [(s, r) for s, r in sector_ranking[:5] if r == r]  # drop any stray NaN defensively
+    max_abs = max((abs(r) for _, r in top5), default=1) or 1
+    for i, (sector, ret) in enumerate(top5, 1):
+        cls = "pos" if ret >= 0 else "neg"
+        bar_pct = min(100, round(abs(ret) / max_abs * 100))
+        sector_rows.append(
+            f'<div class="sector-row"><div class="bar {cls}" style="width:{bar_pct}%;"></div>'
+            f'<span class="rank">{i}.</span>'
+            f'<span class="name">{_esc(sector)}</span><span class="ret {cls}">{ret:+.1f}%</span></div>'
+        )
+    sector_html = "".join(sector_rows) if sector_rows else '<p class="empty">No sector data.</p>'
+
+    n_actionable = len(buckets["actionable"])
+    if regime["regime"] == "RED":
+        decision = "NO TRADE — market conditions unsuitable"
+    elif n_actionable == 0:
+        decision = "WATCHLIST ONLY" if buckets["watch"] else "NO TRADE"
+    elif n_actionable == 1:
+        decision = "TAKE ONE TRADE"
+    else:
+        decision = "TAKE TWO TRADES"
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Swing Ledger — {today}</title>
+<style>{STYLE}</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Indian Equity &middot; Swing Desk</div>
+  <h1>The Daily Ledger</h1>
+  <div class="meta">{today} &middot; {_esc(data_ts)}</div>
+</header>
+<div class="container">
+
+  <div class="section">
+    <h2>Market Regime</h2>
+    <div class="regime-line">
+      <span class="badge {regime['regime']}"><span class="dot"></span> {regime['regime']}</span>
+      <span class="meta" style="font-family:var(--mono); color:var(--ink-dim); font-size:0.8rem;">{regime['confidence']} confidence</span>
+    </div>
+    <ul class="reasons">{reasons_html}</ul>
+  </div>
+
+  <div class="section">
+    <h2>Sector Leaders</h2>
+    {sector_html}
+  </div>
+
+  <div class="section">
+    <h2>Actionable Trades</h2>
+    {_score_bucket_html('actionable', buckets)}
+  </div>
+
+  <div class="section">
+    <h2>Watchlist</h2>
+    {_score_bucket_html('watch', buckets)}
+  </div>
+
+  <div class="section">
+    <h2>Top Rejected Candidates</h2>
+    {_score_bucket_html('reject', buckets)}
+  </div>
+
+  <div class="section">
+    <div class="decision"><span class="tick">§</span> {_esc(decision)} <span class="tick">§</span></div>
+  </div>
+
+  <div class="warning">
+    This is an analytical trading model, not a guarantee of returns. Market conditions
+    can invalidate technical setups. Verify current prices, liquidity, corporate events
+    and order details before trading. Fundamentals/news are not auto-checked — confirm
+    manually before entering any actionable trade.
+  </div>
+
+  <div class="history-link"><a href="reports/index.html">View past reports &rarr;</a></div>
+  <div class="history-link"><a href="trades.html">View trade record &amp; win rate &rarr;</a></div>
+  <div class="history-link"><a href="backtest.html">View backtest results &rarr;</a></div>
+</div>
+</body>
+</html>"""
+
+
+def build_trades_html(log: list, stats: dict) -> str:
+    """Renders the full trade record page: summary stats + a card per trade,
+    newest first."""
+    def badge(status):
+        labels = {"OPEN": "Open", "TARGET_HIT": "Target Hit", "STOP_HIT": "Stop Hit", "EXPIRED": "Expired"}
+        return f'<span class="stamp {status}">{labels.get(status, status)}</span>'
+
+    win_rate_txt = f"{stats['win_rate']}%" if stats["win_rate"] is not None else "—"
+pnl_cls = "win" if stats["total_pnl"] > 0 else ("loss" if stats["total_pnl"] < 0 else "")
+
+    stat_html = f"""
+<div class="stat-grid">
+  <div class="stat-box"><div class="num">{stats['total']}</div><div class="lbl">Entries</div></div>
+  <div class="stat-box"><div class="num">{stats['open']}</div><div class="lbl">Open</div></div>
+  <div class="stat-box"><div class="num win">{stats['target_hit']}</div><div class="lbl">Target Hit</div></div>
+  <div class="stat-box"><div class="num loss">{stats['stop_hit']}</div><div class="lbl">Stop Hit</div></div>
+  <div class="stat-box"><div class="num">{stats['expired']}</div><div class="lbl">Expired</div></div>
+  <div class="stat-box"><div class="num">{win_rate_txt}</div><div class="lbl">Win Rate</div></div>
+</div>
+<div class="pnl-box">
+  <div class="num {pnl_cls}">₹{stats['total_pnl']}</div><div class="lbl">Net Position &middot; Closed Entries</div>
+</div>
+"""
+
+    if not log:
+        cards_html = '<p class="empty">The ledger is empty — entries appear once the first actionable trade is issued.</p>'
+    else:
+        cards = []
+        for t in sorted(log, key=lambda x: x["date_added"], reverse=True):
+            pnl_line = ""
+            if t["pnl"] is not None:
+                cls = "pos" if t["pnl"] >= 0 else "neg"
+                pnl_line = f'<div class="pnl {cls}">P&amp;L ₹{t["pnl"]:+.2f}</div>'
+            closed_line = f' &middot; closed {_esc(t["date_closed"])}' if t.get("date_closed") else ""
+            cards.append(f"""
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">{_esc(t['ticker'].replace('.NS',''))}</span>
+    {badge(t['status'])}
+  </div>
+  <div class="dates">{_esc(t['setup'])} &middot; given {_esc(t['date_added'])}{closed_line}</div>
+  <div class="prices">
+    <span>Entry <b>₹{t['entry']}</b></span>
+    <span>Stop <b>₹{t['stop']}</b></span>
+    <span>Target <b>₹{t['target']}</b></span>
+  </div>
+  {pnl_line}
+</div>""")
+        cards_html = "".join(cards)
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trade Ledger</title>
+<style>{STYLE}</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Indian Equity &middot; Swing Desk</div>
+  <h1>Trade Ledger</h1>
+  <div class="meta">Every actionable entry issued, and its outcome</div>
+</header>
+<div class="container">
+  <div class="section">
+    {stat_html}
+    {cards_html}
+  </div>
+  <div class="history-link"><a href="index.html">&larr; Back to latest report</a></div>
+</div>
+</body>
+</html>"""
+
+
+def build_history_index(report_dates: list) -> str:
+    """report_dates: list of date strings (YYYY-MM-DD), newest first."""
+    rows = "".join(
+        f'<tr><td>{_esc(d)}</td><td><a href="{_esc(d)}.html">Open &rarr;</a></td></tr>'
+        for d in report_dates
+    )
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Report Register</title>
+<style>{STYLE}</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Indian Equity &middot; Swing Desk</div>
+  <h1>Report Register</h1>
+</header>
+<div class="container">
+  <div class="section">
+    <table class="hist">
+      <tr><th>Date</th><th></th></tr>
+      {rows if rows else '<tr><td colspan="2" class="empty">No reports yet.</td></tr>'}
+    </table>
+  </div>
+  <div class="history-link"><a href="../index.html">&larr; Back to latest report</a></div>
+</div>
+</body>
+</html>"""
+
+
+def _equity_curve_svg(equity_curve: list, width: int = 640, height: int = 180) -> str:
+    if not equity_curve:
+        return '<p class="empty">No resolved signals yet.</p>'
+    pts = [0.0] + list(equity_curve)
+    lo, hi = min(pts), max(pts)
+    span = (hi - lo) or 1
+    pad = 10
+n = len(pts)
+    step = (width - 2 * pad) / max(1, n - 1)
+
+    def x(i):
+        return pad + i * step
+
+    def y(v):
+        return height - pad - ((v - lo) / span) * (height - 2 * pad)
+
+    coords = " ".join(f"{x(i):.1f},{y(v):.1f}" for i, v in enumerate(pts))
+    zero_y = y(0)
+    final_positive = pts[-1] >= 0
+    line_color = "var(--gain)" if final_positive else "var(--loss)"
+    fill_id = "eqfillpos" if final_positive else "eqfillneg"
+    fill_color = "var(--gain)" if final_positive else "var(--loss)"
+    area_pts = f"{x(0):.1f},{zero_y:.1f} " + coords + f" {x(n-1):.1f},{zero_y:.1f}"
+
+    return f"""
+<svg viewBox="0 0 {width} {height}" width="100%" height="{height}" preserveAspectRatio="none" style="display:block;">
+  <line x1="{pad}" y1="{zero_y:.1f}" x2="{width-pad}" y2="{zero_y:.1f}" stroke="var(--line-strong)" stroke-width="1" stroke-dasharray="3,3"/>
+  <polygon points="{area_pts}" fill="{fill_color}" opacity="0.12"/>
+  <polyline points="{coords}" fill="none" stroke="{line_color}" stroke-width="2.5"/>
+</svg>"""
+
+
+def build_backtest_html(results: dict) -> str:
+    win_rate_txt = f"{results['win_rate_pct']}%" if results["win_rate_pct"] is not None else "—"
+    exp_r = results["expectancy_r"]
+    exp_cls = "win" if (exp_r or 0) > 0 else ("loss" if (exp_r or 0) < 0 else "")
+    exp_txt = f"{exp_r:+.2f} R" if exp_r is not None else "—"
+
+    stat_html = f"""
+<div class="stat-grid">
+  <div class="stat-box"><div class="num">{results['total_signals']}</div><div class="lbl">Signals Tested</div></div>
+  <div class="stat-box"><div class="num win">{results['target_hit']}</div><div class="lbl">Target Hit</div></div>
+  <div class="stat-box"><div class="num loss">{results['stop_hit']}</div><div class="lbl">Stop Hit</div></div>
+  <div class="stat-box"><div class="num">{results['expired']}</div><div class="lbl">Expired</div></div>
+  <div class="stat-box"><div class="num">{win_rate_txt}</div><div class="lbl">Win Rate</div></div>
+  <div class="stat-box"><div class="num {exp_cls}">{exp_txt}</div><div class="lbl">Expectancy / Trade</div></div>
+</div>
+"""
+
+    warning_html = ""
+    if exp_r is not None and exp_r <= 0:
+        warning_html = """
+  <div class="warning">
+    Expectancy is at or below zero over this test period. Historically, this rule
+    set would not have made money here even before real-world costs (slippage,
+    brokerage, taxes). This doesn't mean it will always fail, but it's a genuine
+    signal to treat live actionable trades with extra caution, and worth revisiting
+    the scoring/setup rules before relying on them further.
+  </div>"""
+
+    recent = results["signals"][-15:][::-1]
+    rows = "".join(f"""
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">{_esc(t['ticker'].replace('.NS',''))}</span>
+    <span class="stamp {t['outcome']}">{t['outcome'].replace('_',' ').title()}</span>
+  </div>
+  <div class="dates">{_esc(t['setup'])} &middot; signal {_esc(t['date'])} &middot; held {t['sessions_held']} sessions</div>
+  <div class="prices">
+    <span>Entry <b>₹{t['entry']}</b></span>
+    <span>Exit <b>₹{t['exit_price']}</b></span>
+    <span>R <b>{t['r_multiple']:+.2f}</b></span>
+  </div>
+</div>""" for t in recent) or '<p class="empty">No signals were generated during this test window.</p>'
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Backtest Results</title>
+<style>{STYLE}</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Indian Equity &middot; Swing Desk</div>
+  <h1>Backtest Results</h1>
+  <div class="meta">Generated {_esc(results['generated_at'])} &middot; walk-forward, no lookahead</div>
+</header>
+<div class="container">
+  <div class="section">
+    {stat_html}
+  </div>
+  <div class="section">
+    <h2>Equity Curve (R-multiples)</h2>
+    {_equity_curve_svg(results['equity_curve'])}
+  </div>
+  {warning_html}
+  <div class="section">
+    <h2>Most Recent Signals</h2>
+    {rows}
+  </div>
+  <div class="warning" style="margin-top:20px;">
+    This is a historical simulation, not a guarantee of future results. Market
+    conditions change. Use this to sanity-check the strategy's rules, not as a
+    promise of what will happen next.
+  </div>
+  <div class="history-link"><a href="index.html">&larr; Back to latest report</a></div>
+</div>
+</body>
+</html>"""
 
