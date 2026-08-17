@@ -422,7 +422,7 @@ def build_trades_html(log: list, stats: dict) -> str:
     win_rate_txt = f"{stats['win_rate']}%" if stats["win_rate"] is not None else "—"
 pnl_cls = "win" if stats["total_pnl"] > 0 else ("loss" if stats["total_pnl"] < 0 else "")
 
-    stat_html = f"""
+stat_html = f"""
 <div class="stat-grid">
   <div class="stat-box"><div class="num">{stats['total']}</div><div class="lbl">Entries</div></div>
   <div class="stat-box"><div class="num">{stats['open']}</div><div class="lbl">Open</div></div>
