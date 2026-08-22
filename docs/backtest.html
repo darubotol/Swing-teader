@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Backtest Results</title>
+<style>
+:root {
+  --bg-top: #131530; --bg: #09090f; --paper: #171a2e; --paper-alt: #1d2138;
+  --line: #2b3050; --line-strong: #4a5182;
+  --ink: #f3f0e4; --ink-dim: #9aa2c4;
+  --saffron: #f5a83f; --saffron-dim: rgba(245,168,63,.20);
+  --gain: #3ed492; --gain-dim: rgba(62,212,146,.20);
+  --loss: #ff6161; --loss-dim: rgba(255,97,97,.20);
+  --info: #8298ff; --info-dim: rgba(130,152,255,.20);
+  --muted-badge: rgba(154,162,196,.18);
+  --serif: Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", ui-serif, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "Courier New", monospace;
+}
+* { box-sizing: border-box; }
+html { background: var(--bg); }
+body {
+  margin: 0; padding: 0 0 48px 0;
+  background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg) 480px);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px; line-height: 1.55;
+}
+header {
+  padding: 26px 20px 18px; border-bottom: 3px double var(--line-strong);
+  position: sticky; top: 0; background: linear-gradient(180deg, var(--bg-top) 0%, rgba(19,21,48,0.97) 100%); z-index: 10;
+}
+header .eyebrow {
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.14em;
+  color: var(--saffron); text-transform: uppercase; margin-bottom: 8px; font-weight: 700;
+}
+header h1 {
+  font-family: var(--serif); font-size: 1.6rem; font-weight: 700;
+  letter-spacing: 0.01em; margin: 0 0 8px; color: var(--ink);
+  background: linear-gradient(90deg, var(--ink) 0%, #d8c9a8 100%);
+  -webkit-background-clip: text; background-clip: text;
+}
+header .meta {
+  color: var(--ink-dim); font-size: 0.78rem; font-family: var(--mono);
+}
+.container { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+.section { margin-top: 32px; }
+.section h2 {
+  font-family: var(--serif); font-style: italic; font-weight: 400;
+  font-size: 1.08rem; color: var(--ink); margin: 0 0 14px; padding-bottom: 9px;
+  border-bottom: 1px solid var(--line); letter-spacing: 0.01em;
+  display: flex; align-items: center; gap: 8px;
+}
+.section h2::before { content: ""; width: 4px; height: 16px; background: var(--saffron); border-radius: 2px; display: inline-block; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 4px;
+  font-family: var(--mono); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.badge.GREEN { background: var(--gain); color: #05261a; }
+.badge.YELLOW { background: var(--saffron); color: #2b1704; }
+.badge.RED { background: var(--loss); color: #2b0606; }
+
+/* Stamp-style status badges — rotated, solid-fill, ledger-approval feel */
+.stamp {
+  display: inline-block; padding: 6px 12px; border-radius: 4px;
+  font-family: var(--mono); font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em;
+  text-transform: uppercase; border: 1.5px solid currentColor; transform: rotate(-2.5deg);
+  position: relative;
+}
+.stamp::after {
+  content: ""; position: absolute; inset: 2px; border: 1px solid currentColor;
+  border-radius: 2px; opacity: 0.55; pointer-events: none;
+}
+.stamp.ACTIONABLE, .stamp.TARGET_HIT { color: var(--gain); background: var(--gain-dim); }
+.stamp.WATCH, .stamp.OPEN { color: var(--info); background: var(--info-dim); }
+.stamp.REJECT, .stamp.STOP_HIT { color: var(--loss); background: var(--loss-dim); }
+.stamp.EXPIRED { color: var(--ink-dim); background: var(--muted-badge); }
+
+.regime-line { display: flex; align-items: center; margin-bottom: 14px; }
+.regime-line .badge { margin-right: 12px; }
+.regime-line .dot {
+  width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0;
+  display: inline-block;
+}
+ul.reasons { margin: 8px 0 0; padding-left: 0; list-style: none; color: var(--ink-dim); font-size: 0.92rem; }
+ul.reasons li { margin-bottom: 7px; padding-left: 16px; position: relative; }
+ul.reasons li::before { content: "—"; position: absolute; left: 0; color: var(--saffron); opacity: 0.6; }
+
+.sector-row {
+  position: relative; overflow: hidden;
+  display: flex; align-items: baseline; gap: 10px; padding: 11px 10px;
+  margin-bottom: 4px; border-radius: 5px; font-size: 0.95rem;
+  background: var(--paper);
+}
+.sector-row .bar {
+  position: absolute; left: 0; top: 0; bottom: 0; z-index: 0; opacity: 0.22;
+}
+.sector-row .bar.pos { background: var(--gain); }
+.sector-row .bar.neg { background: var(--loss); }
+.sector-row .rank {
+  font-family: var(--serif); color: var(--ink-dim); width: 18px; flex-shrink: 0; font-size: 0.9rem;
+  position: relative; z-index: 1;
+}
+.sector-row .name { flex: 1; position: relative; z-index: 1; font-weight: 600; }
+.sector-row .ret { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 700; position: relative; z-index: 1; }
+.sector-row .ret.pos { color: var(--gain); }
+.sector-row .ret.neg { color: var(--loss); }
+
+.card {
+  background: linear-gradient(155deg, var(--paper) 0%, var(--paper-alt) 100%);
+  border: 1px solid var(--line); border-top: 3px solid var(--saffron);
+  border-radius: 8px; padding: 18px 20px; margin-bottom: 16px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+}
+.card.setup-breakout { border-top-color: var(--saffron); }
+.card.setup-breakout-retest { border-top-color: var(--info); }
+.card.setup-trend-pullback { border-top-color: var(--gain); }
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px; }
+.card-top .name { font-family: var(--serif); font-size: 1.2rem; font-weight: 700; }
+.card-top .score {
+  display: inline-block; margin-top: 5px; padding: 2px 8px; border-radius: 3px;
+  font-size: 0.74rem; font-family: var(--mono); font-weight: 700;
+}
+.card-top .score.tier-a { background: var(--gain-dim); color: var(--gain); }
+.card-top .score.tier-b { background: var(--saffron-dim); color: var(--saffron); }
+.card .setup-line { color: var(--ink-dim); font-size: 0.82rem; font-family: var(--mono); margin-bottom: 12px; }
+.figline {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 6px 0; font-size: 0.92rem; border-bottom: 1px solid var(--line);
+}
+.figline:last-child { border-bottom: none; }
+.figline .label { color: var(--ink-dim); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.figline .value { font-family: var(--serif); font-variant-numeric: tabular-nums; font-weight: 700; color: var(--ink); }
+.figblock { margin-bottom: 10px; padding-top: 8px; border-top: 1px solid var(--line); }
+.notes { margin: 10px 0 0; padding-left: 0; list-style: none; font-size: 0.85rem; color: var(--ink-dim); font-style: italic; }
+.notes li { padding-left: 16px; position: relative; }
+.notes li::before { content: "❧"; position: absolute; left: 0; color: var(--saffron); font-style: normal; }
+
+.watch-item, .reject-item {
+  padding: 12px 14px; margin-bottom: 6px; border-radius: 6px; font-size: 0.92rem;
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  background: var(--paper); border-left: 3px solid var(--info);
+}
+.reject-item { border-left-color: var(--loss); opacity: 0.85; }
+.watch-item .name, .reject-item .name { font-family: var(--serif); font-weight: 700; }
+.watch-item .detail, .reject-item .detail { color: var(--ink-dim); font-size: 0.78rem; margin-top: 3px; font-family: var(--mono); }
+.watch-left, .reject-left { flex: 1; }
+
+.empty {
+  color: var(--ink-dim); font-style: italic; font-size: 0.92rem; font-family: var(--serif);
+  padding: 14px 0;
+}
+
+.decision {
+  font-family: var(--serif); font-size: 1.15rem; font-weight: 700; text-align: center;
+  padding: 20px; border-radius: 8px; letter-spacing: 0.02em;
+  background: linear-gradient(155deg, var(--paper) 0%, var(--paper-alt) 100%);
+  border: 1px solid var(--line-strong);
+}
+.decision .tick { color: var(--saffron); }
+
+.warning {
+  margin-top: 30px; padding: 14px 16px; border-radius: 6px;
+  background: var(--paper-alt); border-left: 3px solid var(--saffron);
+  color: var(--ink-dim); font-size: 0.82rem; font-family: var(--mono); line-height: 1.6;
+}
+
+.history-link { display: block; margin-top: 22px; text-align: center; }
+.history-link a {
+  color: var(--saffron); text-decoration: none; font-size: 0.85rem;
+  font-family: var(--mono); letter-spacing: 0.03em; font-weight: 600;
+}
+table.hist { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+table.hist th {
+  font-family: var(--mono); text-transform: uppercase; font-size: 0.7rem;
+  letter-spacing: 0.06em; color: var(--ink-dim); text-align: left; padding: 8px 6px;
+  border-bottom: 1px solid var(--line-strong);
+}
+table.hist td { padding: 12px 10px; border-bottom: 1px solid var(--line); font-family: var(--serif); background: var(--paper); }
+table.hist tr td:first-child { border-radius: 6px 0 0 6px; }
+table.hist tr td:last-child { border-radius: 0 6px 6px 0; }
+table.hist a { color: var(--saffron); text-decoration: none; font-family: var(--mono); font-size: 0.82rem; font-weight: 600; }
+
+.stat-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+.stat-box {
+  background: linear-gradient(155deg, var(--paper) 0%, var(--paper-alt) 100%);
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: 16px 8px; text-align: center; flex: 1 1 30%; min-width: 90px;
+}
+.stat-box .num { font-family: var(--serif); font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.stat-box .lbl {
+  font-size: 0.65rem; color: var(--ink-dim); margin-top: 5px; font-family: var(--mono);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.stat-box .num.win { color: var(--gain); }
+.stat-box .num.loss { color: var(--loss); }
+.pnl-box {
+  background: linear-gradient(155deg, var(--paper) 0%, var(--paper-alt) 100%);
+  border: 1px solid var(--line-strong); border-radius: 8px;
+  padding: 18px; text-align: center; margin-bottom: 26px;
+}
+.pnl-box .num { font-family: var(--serif); font-size: 1.9rem; font-weight: 700; }
+.pnl-box .lbl { font-size: 0.68rem; color: var(--ink-dim); margin-top: 5px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.05em; }
+
+.trade-card {
+  background: linear-gradient(155deg, var(--paper) 0%, var(--paper-alt) 100%);
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: 16px 20px; margin-bottom: 14px;
+}
+.trade-card .row1 { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.trade-card .ticker { font-family: var(--serif); font-weight: 700; font-size: 1.08rem; }
+.trade-card .dates { color: var(--ink-dim); font-size: 0.76rem; margin-top: 4px; font-family: var(--mono); }
+.trade-card .prices {
+  display: flex; gap: 16px; font-size: 0.85rem; margin-top: 10px; padding-top: 10px;
+  border-top: 1px solid var(--line); color: var(--ink-dim); font-family: var(--mono);
+}
+.trade-card .prices b { color: var(--ink); font-family: var(--serif); font-weight: 700; }
+.trade-card .pnl { font-size: 0.94rem; font-weight: 700; margin-top: 8px; font-family: var(--serif); }
+.trade-card .pnl.pos { color: var(--gain); } .trade-card .pnl.neg { color: var(--loss); }
+
+.score-breakdown { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.score-chip {
+  font-family: var(--mono); font-size: 0.68rem; background: var(--paper-alt);
+  border: 1px solid var(--line); border-radius: 4px; padding: 3px 8px; color: var(--ink-dim);
+}
+.score-chip b { color: var(--ink); font-weight: 700; }
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Indian Equity &middot; Swing Desk</div>
+  <h1>Backtest Results</h1>
+  <div class="meta">Generated 2026-08-22T16:31:37 &middot; walk-forward, no lookahead</div>
+</header>
+<div class="container">
+  <div class="section">
+    
+<div class="stat-grid">
+  <div class="stat-box"><div class="num">128</div><div class="lbl">Signals Tested</div></div>
+  <div class="stat-box"><div class="num win">15</div><div class="lbl">Target Hit</div></div>
+  <div class="stat-box"><div class="num loss">49</div><div class="lbl">Stop Hit</div></div>
+  <div class="stat-box"><div class="num">64</div><div class="lbl">Expired</div></div>
+  <div class="stat-box"><div class="num">23.4%</div><div class="lbl">Win Rate</div></div>
+  <div class="stat-box"><div class="num win">+0.04 R</div><div class="lbl">Expectancy / Trade</div></div>
+</div>
+
+  </div>
+  <div class="section">
+    <h2>Equity Curve (R-multiples)</h2>
+    
+<svg viewBox="0 0 640 180" width="100%" height="180" preserveAspectRatio="none" style="display:block;">
+  <line x1="10" y1="149.5" x2="630" y2="149.5" stroke="var(--line-strong)" stroke-width="1" stroke-dasharray="3,3"/>
+  <polygon points="10.0,149.5 10.0,149.5 14.8,149.6 19.7,155.8 24.5,160.4 29.4,166.7 34.2,162.0 39.1,162.8 43.9,165.2 48.8,163.7 53.6,170.0 58.4,164.1 63.3,150.3 68.1,156.5 73.0,142.8 77.8,129.0 82.7,117.6 87.5,103.9 92.3,90.1 97.2,76.3 102.0,62.5 106.9,53.9 111.7,60.2 116.6,52.1 121.4,38.4 126.2,39.4 131.1,39.1 135.9,35.0 140.8,34.8 145.6,41.1 150.5,47.3 155.3,53.6 160.2,48.7 165.0,50.0 169.8,47.9 174.7,54.2 179.5,60.5 184.4,58.1 189.2,51.4 194.1,42.9 198.9,41.4 203.8,36.4 208.6,42.7 213.4,28.9 218.3,35.2 223.1,21.5 228.0,14.7 232.8,12.9 237.7,17.5 242.5,20.4 247.3,26.7 252.2,21.5 257.0,27.7 261.9,31.3 266.7,32.9 271.6,32.7 276.4,34.6 281.2,23.2 286.1,29.5 290.9,15.7 295.8,13.7 300.6,12.9 305.5,19.2 310.3,10.0 315.2,16.3 320.0,22.5 324.8,28.8 329.7,35.0 334.5,41.3 339.4,47.6 344.2,53.8 349.1,60.1 353.9,66.4 358.8,72.6 363.6,78.9 368.4,79.4 373.3,85.6 378.1,83.3 383.0,89.5 387.8,85.6 392.7,91.9 397.5,90.8 402.3,97.0 407.2,103.3 412.0,97.4 416.9,92.8 421.7,79.1 426.6,65.3 431.4,58.6 436.2,55.5 441.1,61.7 445.9,57.1 450.8,63.4 455.6,49.6 460.5,54.3 465.3,60.5 470.2,66.8 475.0,73.1 479.8,72.9 484.7,73.3 489.5,79.6 494.4,85.8 499.2,85.2 504.1,82.6 508.9,88.8 513.8,83.8 518.6,88.0 523.4,90.0 528.3,96.3 533.1,82.5 538.0,88.8 542.8,95.0 547.7,101.3 552.5,100.1 557.3,106.4 562.2,110.6 567.0,116.9 571.9,118.3 576.7,112.5 581.6,116.1 586.4,117.8 591.2,114.6 596.1,120.8 600.9,120.5 605.8,126.8 610.6,123.4 615.5,122.9 620.3,118.1 625.2,124.3 630.0,113.5 630.0,149.5" fill="var(--gain)" opacity="0.12"/>
+  <polyline points="10.0,149.5 14.8,149.6 19.7,155.8 24.5,160.4 29.4,166.7 34.2,162.0 39.1,162.8 43.9,165.2 48.8,163.7 53.6,170.0 58.4,164.1 63.3,150.3 68.1,156.5 73.0,142.8 77.8,129.0 82.7,117.6 87.5,103.9 92.3,90.1 97.2,76.3 102.0,62.5 106.9,53.9 111.7,60.2 116.6,52.1 121.4,38.4 126.2,39.4 131.1,39.1 135.9,35.0 140.8,34.8 145.6,41.1 150.5,47.3 155.3,53.6 160.2,48.7 165.0,50.0 169.8,47.9 174.7,54.2 179.5,60.5 184.4,58.1 189.2,51.4 194.1,42.9 198.9,41.4 203.8,36.4 208.6,42.7 213.4,28.9 218.3,35.2 223.1,21.5 228.0,14.7 232.8,12.9 237.7,17.5 242.5,20.4 247.3,26.7 252.2,21.5 257.0,27.7 261.9,31.3 266.7,32.9 271.6,32.7 276.4,34.6 281.2,23.2 286.1,29.5 290.9,15.7 295.8,13.7 300.6,12.9 305.5,19.2 310.3,10.0 315.2,16.3 320.0,22.5 324.8,28.8 329.7,35.0 334.5,41.3 339.4,47.6 344.2,53.8 349.1,60.1 353.9,66.4 358.8,72.6 363.6,78.9 368.4,79.4 373.3,85.6 378.1,83.3 383.0,89.5 387.8,85.6 392.7,91.9 397.5,90.8 402.3,97.0 407.2,103.3 412.0,97.4 416.9,92.8 421.7,79.1 426.6,65.3 431.4,58.6 436.2,55.5 441.1,61.7 445.9,57.1 450.8,63.4 455.6,49.6 460.5,54.3 465.3,60.5 470.2,66.8 475.0,73.1 479.8,72.9 484.7,73.3 489.5,79.6 494.4,85.8 499.2,85.2 504.1,82.6 508.9,88.8 513.8,83.8 518.6,88.0 523.4,90.0 528.3,96.3 533.1,82.5 538.0,88.8 542.8,95.0 547.7,101.3 552.5,100.1 557.3,106.4 562.2,110.6 567.0,116.9 571.9,118.3 576.7,112.5 581.6,116.1 586.4,117.8 591.2,114.6 596.1,120.8 600.9,120.5 605.8,126.8 610.6,123.4 615.5,122.9 620.3,118.1 625.2,124.3 630.0,113.5" fill="none" stroke="var(--gain)" stroke-width="2.5"/>
+</svg>
+  </div>
+  
+  <div class="section">
+    <h2>Most Recent Signals</h2>
+    
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">BHARATFORG</span>
+    <span class="stamp EXPIRED">Expired</span>
+  </div>
+  <div class="dates">Trend Pullback &middot; signal 2026-07-10 &middot; held 20 sessions</div>
+  <div class="prices">
+    <span>Entry <b>₹2127.58</b></span>
+    <span>Exit <b>₹2265.2</b></span>
+    <span>R <b>+1.74</b></span>
+  </div>
+</div>
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">MAXHEALTH</span>
+    <span class="stamp STOP_HIT">Stop Hit</span>
+  </div>
+  <div class="dates">Trend Pullback &middot; signal 2026-07-10 &middot; held 10 sessions</div>
+  <div class="prices">
+    <span>Entry <b>₹1113.64</b></span>
+    <span>Exit <b>₹1071.7</b></span>
+    <span>R <b>-1.00</b></span>
+  </div>
+</div>
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">TITAN</span>
+    <span class="stamp EXPIRED">Expired</span>
+  </div>
+  <div class="dates">Breakout &middot; signal 2026-07-07 &middot; held 20 sessions</div>
+  <div class="prices">
+    <span>Entry <b>₹4506.44</b></span>
+    <span>Exit <b>₹4935.0</b></span>
+    <span>R <b>+0.77</b></span>
+  </div>
+</div>
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">INDUSINDBK</span>
+    <span class="stamp EXPIRED">Expired</span>
+  </div>
+  <div class="dates">Breakout &middot; signal 2026-07-07 &middot; held 20 sessions</div>
+  <div class="prices">
+    <span>Entry <b>₹1015.34</b></span>
+    <span>Exit <b>₹1026.0</b></span>
+    <span>R <b>+0.08</b></span>
+  </div>
+</div>
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">BAJAJFINSV</span>
+    <span class="stamp EXPIRED">Expired</span>
+  </div>
+  <div class="dates">Breakout &middot; signal 2026-07-02 &middot; held 20 sessions</div>
+  <div class="prices">
+    <span>Entry <b>₹1814.83</b></span>
+    <span>Exit <b>₹1909.4</b></span>
+    <span>R <b>+0.54</b></span>
+  </div>
+</div>
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">DRREDDY</span>
+    <span class="stamp STOP_HIT">Stop Hit</span>
+  </div>
+  <div class="dates">Breakout &middot; signal 2026-06-29 &middot; held 9 sessions</div>
+  <div class="prices">
+    <span>Entry <b>₹1358.47</b></span>
+    <span>Exit <b>₹1240.53</b></span>
+    <span>R <b>-1.00</b></span>
+  </div>
+</div>
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">BHARATFORG</span>
+    <span class="stamp EXPIRED">Expired</span>
+  </div>
+  <div class="dates">Breakout &middot; signal 2026-06-29 &middot; held 20 sessions</div>
+  <div class="prices">
+    <span>Entry <b>₹2167.43</b></span>
+    <span>Exit <b>₹2181.3</b></span>
+    <span>R <b>+0.05</b></span>
+  </div>
+</div>
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">ABB</span>
+    <span class="stamp STOP_HIT">Stop Hit</span>
+  </div>
+  <div class="dates">Trend Pullback &middot; signal 2026-06-23 &middot; held 4 sessions</div>
+  <div class="prices">
+    <span>Entry <b>₹7110.58</b></span>
+    <span>Exit <b>₹6820.97</b></span>
+    <span>R <b>-1.00</b></span>
+  </div>
+</div>
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">AUROPHARMA</span>
+    <span class="stamp EXPIRED">Expired</span>
+  </div>
+  <div class="dates">Breakout &middot; signal 2026-06-23 &middot; held 20 sessions</div>
+  <div class="prices">
+    <span>Entry <b>₹1515.53</b></span>
+    <span>Exit <b>₹1579.7</b></span>
+    <span>R <b>+0.52</b></span>
+  </div>
+</div>
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">ADANIPORTS</span>
+    <span class="stamp EXPIRED">Expired</span>
+  </div>
+  <div class="dates">Trend Pullback &middot; signal 2026-06-18 &middot; held 20 sessions</div>
+  <div class="prices">
+    <span>Entry <b>₹1851.31</b></span>
+    <span>Exit <b>₹1826.4</b></span>
+    <span>R <b>-0.27</b></span>
+  </div>
+</div>
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">TRENT</span>
+    <span class="stamp EXPIRED">Expired</span>
+  </div>
+  <div class="dates">Breakout &middot; signal 2026-06-18 &middot; held 20 sessions</div>
+  <div class="prices">
+    <span>Entry <b>₹3124.34</b></span>
+    <span>Exit <b>₹2860.2</b></span>
+    <span>R <b>-0.59</b></span>
+  </div>
+</div>
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">BHARATFORG</span>
+    <span class="stamp EXPIRED">Expired</span>
+  </div>
+  <div class="dates">Breakout &middot; signal 2026-06-15 &middot; held 20 sessions</div>
+  <div class="prices">
+    <span>Entry <b>₹1988.43</b></span>
+    <span>Exit <b>₹2145.6</b></span>
+    <span>R <b>+0.94</b></span>
+  </div>
+</div>
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">EICHERMOT</span>
+    <span class="stamp EXPIRED">Expired</span>
+  </div>
+  <div class="dates">Breakout &middot; signal 2026-06-15 &middot; held 20 sessions</div>
+  <div class="prices">
+    <span>Entry <b>₹7385.98</b></span>
+    <span>Exit <b>₹7220.88</b></span>
+    <span>R <b>-0.23</b></span>
+  </div>
+</div>
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">JSWSTEEL</span>
+    <span class="stamp STOP_HIT">Stop Hit</span>
+  </div>
+  <div class="dates">Trend Pullback &middot; signal 2026-06-02 &middot; held 6 sessions</div>
+  <div class="prices">
+    <span>Entry <b>₹1309.83</b></span>
+    <span>Exit <b>₹1246.58</b></span>
+    <span>R <b>-1.00</b></span>
+  </div>
+</div>
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">TECHM</span>
+    <span class="stamp EXPIRED">Expired</span>
+  </div>
+  <div class="dates">Breakout &middot; signal 2026-06-02 &middot; held 20 sessions</div>
+  <div class="prices">
+    <span>Entry <b>₹1527.49</b></span>
+    <span>Exit <b>₹1369.12</b></span>
+    <span>R <b>-0.68</b></span>
+  </div>
+</div>
+  </div>
+  <div class="warning" style="margin-top:20px;">
+    This is a historical simulation, not a guarantee of future results. Market
+    conditions change. Use this to sanity-check the strategy's rules, not as a
+    promise of what will happen next.
+  </div>
+  <div class="history-link"><a href="index.html">&larr; Back to latest report</a></div>
+</div>
+</body>
+</html>
