@@ -220,6 +220,13 @@ table.hist a { color: var(--saffron); text-decoration: none; font-family: var(--
 .trade-card .prices b { color: var(--ink); font-family: var(--serif); font-weight: 700; }
 .trade-card .pnl { font-size: 0.94rem; font-weight: 700; margin-top: 8px; font-family: var(--serif); }
 .trade-card .pnl.pos { color: var(--gain); } .trade-card .pnl.neg { color: var(--loss); }
+
+.score-breakdown { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.score-chip {
+  font-family: var(--mono); font-size: 0.68rem; background: var(--paper-alt);
+  border: 1px solid var(--line); border-radius: 4px; padding: 3px 8px; color: var(--ink-dim);
+}
+.score-chip b { color: var(--ink); font-weight: 700; }
 </style>
 </head>
 <body>
@@ -232,18 +239,44 @@ table.hist a { color: var(--saffron); text-decoration: none; font-family: var(--
   <div class="section">
     
 <div class="stat-grid">
-  <div class="stat-box"><div class="num">4</div><div class="lbl">Entries</div></div>
+  <div class="stat-box"><div class="num">6</div><div class="lbl">Entries</div></div>
   <div class="stat-box"><div class="num">4</div><div class="lbl">Open</div></div>
   <div class="stat-box"><div class="num win">0</div><div class="lbl">Target Hit</div></div>
-  <div class="stat-box"><div class="num loss">0</div><div class="lbl">Stop Hit</div></div>
+  <div class="stat-box"><div class="num loss">2</div><div class="lbl">Stop Hit</div></div>
   <div class="stat-box"><div class="num">0</div><div class="lbl">Expired</div></div>
-  <div class="stat-box"><div class="num">—</div><div class="lbl">Win Rate</div></div>
+  <div class="stat-box"><div class="num">0.0%</div><div class="lbl">Win Rate</div></div>
 </div>
 <div class="pnl-box">
-  <div class="num ">₹0</div><div class="lbl">Net Position &middot; Closed Entries</div>
+  <div class="num loss">₹-1303.56</div><div class="lbl">Net Position &middot; Closed Entries</div>
 </div>
 
     
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">M&amp;M</span>
+    <span class="stamp OPEN">Open</span>
+  </div>
+  <div class="dates">Trend Pullback &middot; given 2026-08-22</div>
+  <div class="prices">
+    <span>Entry <b>₹3429.26</b></span>
+    <span>Stop <b>₹3312.07</b></span>
+    <span>Target <b>₹3687.08</b></span>
+  </div>
+  
+</div>
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">ASHOKLEY</span>
+    <span class="stamp OPEN">Open</span>
+  </div>
+  <div class="dates">Trend Pullback &middot; given 2026-08-22</div>
+  <div class="prices">
+    <span>Entry <b>₹173.86</b></span>
+    <span>Stop <b>₹166.73</b></span>
+    <span>Target <b>₹189.55</b></span>
+  </div>
+  
+</div>
 <div class="trade-card">
   <div class="row1">
     <span class="ticker">LT</span>
@@ -260,15 +293,15 @@ table.hist a { color: var(--saffron); text-decoration: none; font-family: var(--
 <div class="trade-card">
   <div class="row1">
     <span class="ticker">TCS</span>
-    <span class="stamp OPEN">Open</span>
+    <span class="stamp STOP_HIT">Stop Hit</span>
   </div>
-  <div class="dates">Trend Pullback &middot; given 2026-08-16</div>
+  <div class="dates">Trend Pullback &middot; given 2026-08-16 &middot; closed 2026-08-18</div>
   <div class="prices">
     <span>Entry <b>₹2372.8</b></span>
     <span>Stop <b>₹2306.14</b></span>
     <span>Target <b>₹2519.45</b></span>
   </div>
-  
+  <div class="pnl neg">P&amp;L ₹-533.28</div>
 </div>
 <div class="trade-card">
   <div class="row1">
@@ -286,15 +319,15 @@ table.hist a { color: var(--saffron); text-decoration: none; font-family: var(--
 <div class="trade-card">
   <div class="row1">
     <span class="ticker">TECHM</span>
-    <span class="stamp OPEN">Open</span>
+    <span class="stamp STOP_HIT">Stop Hit</span>
   </div>
-  <div class="dates">Trend Pullback &middot; given 2026-08-15</div>
+  <div class="dates">Trend Pullback &middot; given 2026-08-15 &middot; closed 2026-08-19</div>
   <div class="prices">
     <span>Entry <b>₹1640.96</b></span>
     <span>Stop <b>₹1576.77</b></span>
     <span>Target <b>₹1782.18</b></span>
   </div>
-  
+  <div class="pnl neg">P&amp;L ₹-770.28</div>
 </div>
   </div>
   <div class="history-link"><a href="index.html">&larr; Back to latest report</a></div>
