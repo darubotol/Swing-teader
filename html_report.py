@@ -436,7 +436,7 @@ stat_html = f"""
 </div>
 """
 
-    if not log:
+if not log:
         cards_html = '<p class="empty">The ledger is empty — entries appear once the first actionable trade is issued.</p>'
     else:
         cards = []
@@ -568,8 +568,8 @@ def build_backtest_html(results: dict) -> str:
 </div>
 """
 
-    warning_html = ""
-    if exp_r is not None and exp_r <= 0:
+warning_html = ""
+if exp_r is not None and exp_r <= 0:
         warning_html = """
   <div class="warning">
     Expectancy is at or below zero over this test period. Historically, this rule
@@ -623,8 +623,7 @@ def build_backtest_html(results: dict) -> str:
   </div>
   <div class="warning" style="margin-top:20px;">
     This is a historical simulation, not a guarantee of future results. Market
-    conditions change. Use this to sanity-check the strategy's rules, not as a
-    promise of what will happen next.
+    conditions change. Use this to sanity-check the strategy's rules, not as a promise of what will happen next.
   </div>
   <div class="history-link"><a href="index.html">&larr; Back to latest report</a></div>
 </div>
