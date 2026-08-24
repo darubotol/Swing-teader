@@ -94,5 +94,37 @@
     "date_closed": null,
     "exit_price": null,
     "pnl": null
+  },
+  {
+    "ticker": "HEROMOTOCO.NS",
+    "sector": "Auto",
+    "setup": "Trend Pullback",
+    "score": 80.6,
+    "date_added": "2026-08-24",
+    "entry": 5692.82,
+    "stop": 5488.68,
+    "target": 6141.93,
+    "qty": 3,
+    "capital_deployed": 17078.46,
+    "status": "OPEN",
+    "date_closed": null,
+    "exit_price": null,
+    "pnl": null
+  },
+  {
+    "ticker": "TVSMOTOR.NS",
+    "sector": "Auto",
+    "setup": "Trend Pullback",
+    "score": 80.6,
+    "date_added": "2026-08-24",
+    "entry": 4390.24,
+    "stop": 4229.22,
+    "target": 4744.48,
+    "qty": 4,
+    "capital_deployed": 17560.96,
+    "status": "OPEN",
+    "date_closed": null,
+    "exit_price": null,
+    "pnl": null
   }
 ]
