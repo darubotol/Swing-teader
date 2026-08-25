@@ -89,6 +89,16 @@ ul.reasons { margin: 8px 0 0; padding-left: 0; list-style: none; color: var(--in
 ul.reasons li { margin-bottom: 7px; padding-left: 16px; position: relative; }
 ul.reasons li::before { content: "—"; position: absolute; left: 0; color: var(--saffron); opacity: 0.6; }
 
+.hero-strip { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.hero-box {
+  flex: 1 1 21%; min-width: 72px; text-align: center; padding: 12px 6px;
+  background: linear-gradient(155deg, var(--paper) 0%, var(--paper-alt) 100%);
+  border: 1px solid var(--line); border-radius: 8px;
+}
+.hero-box .num { font-family: var(--serif); font-size: 1.25rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.hero-box .lbl { font-size: 0.62rem; color: var(--ink-dim); margin-top: 3px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.04em; }
+.hero-box .num.win { color: var(--gain); } .hero-box .num.loss { color: var(--loss); }
+
 .sector-row {
   position: relative; overflow: hidden;
   display: flex; align-items: baseline; gap: 10px; padding: 11px 10px;
@@ -127,6 +137,7 @@ ul.reasons li::before { content: "—"; position: absolute; left: 0; color: var(
 .card-top .score.tier-a { background: var(--gain-dim); color: var(--gain); }
 .card-top .score.tier-b { background: var(--saffron-dim); color: var(--saffron); }
 .card .setup-line { color: var(--ink-dim); font-size: 0.82rem; font-family: var(--mono); margin-bottom: 12px; }
+.sparkline { display: block; margin: 4px 0 12px; }
 .figline {
   display: flex; justify-content: space-between; align-items: baseline;
   padding: 6px 0; font-size: 0.92rem; border-bottom: 1px solid var(--line);
@@ -245,6 +256,8 @@ table.hist a { color: var(--saffron); text-decoration: none; font-family: var(--
   <div class="stat-box"><div class="num loss">2</div><div class="lbl">Stop Hit</div></div>
   <div class="stat-box"><div class="num">0</div><div class="lbl">Expired</div></div>
   <div class="stat-box"><div class="num">0.0%</div><div class="lbl">Win Rate</div></div>
+  <div class="stat-box"><div class="num loss">-1.00 R</div><div class="lbl">Avg R / Trade</div></div>
+  <div class="stat-box"><div class="num loss">2 losss</div><div class="lbl">Current Streak</div></div>
 </div>
 <div class="pnl-box">
   <div class="num loss">₹-1303.56</div><div class="lbl">Net Position &middot; Closed Entries</div>
