@@ -89,6 +89,16 @@ ul.reasons { margin: 8px 0 0; padding-left: 0; list-style: none; color: var(--in
 ul.reasons li { margin-bottom: 7px; padding-left: 16px; position: relative; }
 ul.reasons li::before { content: "—"; position: absolute; left: 0; color: var(--saffron); opacity: 0.6; }
 
+.hero-strip { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.hero-box {
+  flex: 1 1 21%; min-width: 72px; text-align: center; padding: 12px 6px;
+  background: linear-gradient(155deg, var(--paper) 0%, var(--paper-alt) 100%);
+  border: 1px solid var(--line); border-radius: 8px;
+}
+.hero-box .num { font-family: var(--serif); font-size: 1.25rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.hero-box .lbl { font-size: 0.62rem; color: var(--ink-dim); margin-top: 3px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.04em; }
+.hero-box .num.win { color: var(--gain); } .hero-box .num.loss { color: var(--loss); }
+
 .sector-row {
   position: relative; overflow: hidden;
   display: flex; align-items: baseline; gap: 10px; padding: 11px 10px;
@@ -127,6 +137,7 @@ ul.reasons li::before { content: "—"; position: absolute; left: 0; color: var(
 .card-top .score.tier-a { background: var(--gain-dim); color: var(--gain); }
 .card-top .score.tier-b { background: var(--saffron-dim); color: var(--saffron); }
 .card .setup-line { color: var(--ink-dim); font-size: 0.82rem; font-family: var(--mono); margin-bottom: 12px; }
+.sparkline { display: block; margin: 4px 0 12px; }
 .figline {
   display: flex; justify-content: space-between; align-items: baseline;
   padding: 6px 0; font-size: 0.92rem; border-bottom: 1px solid var(--line);
@@ -233,18 +244,18 @@ table.hist a { color: var(--saffron); text-decoration: none; font-family: var(--
 <header>
   <div class="eyebrow">Indian Equity &middot; Swing Desk</div>
   <h1>Backtest Results</h1>
-  <div class="meta">Generated 2026-08-22T16:31:37 &middot; walk-forward, no lookahead</div>
+  <div class="meta">Generated 2026-08-25T03:39:40 &middot; walk-forward, no lookahead</div>
 </header>
 <div class="container">
   <div class="section">
     
 <div class="stat-grid">
-  <div class="stat-box"><div class="num">128</div><div class="lbl">Signals Tested</div></div>
-  <div class="stat-box"><div class="num win">15</div><div class="lbl">Target Hit</div></div>
-  <div class="stat-box"><div class="num loss">49</div><div class="lbl">Stop Hit</div></div>
-  <div class="stat-box"><div class="num">64</div><div class="lbl">Expired</div></div>
-  <div class="stat-box"><div class="num">23.4%</div><div class="lbl">Win Rate</div></div>
-  <div class="stat-box"><div class="num win">+0.04 R</div><div class="lbl">Expectancy / Trade</div></div>
+  <div class="stat-box"><div class="num">115</div><div class="lbl">Signals Tested</div></div>
+  <div class="stat-box"><div class="num win">13</div><div class="lbl">Target Hit</div></div>
+  <div class="stat-box"><div class="num loss">53</div><div class="lbl">Stop Hit</div></div>
+  <div class="stat-box"><div class="num">49</div><div class="lbl">Expired</div></div>
+  <div class="stat-box"><div class="num">19.7%</div><div class="lbl">Win Rate</div></div>
+  <div class="stat-box"><div class="num loss">-0.03 R</div><div class="lbl">Expectancy / Trade</div></div>
 </div>
 
   </div>
@@ -252,12 +263,19 @@ table.hist a { color: var(--saffron); text-decoration: none; font-family: var(--
     <h2>Equity Curve (R-multiples)</h2>
     
 <svg viewBox="0 0 640 180" width="100%" height="180" preserveAspectRatio="none" style="display:block;">
-  <line x1="10" y1="149.5" x2="630" y2="149.5" stroke="var(--line-strong)" stroke-width="1" stroke-dasharray="3,3"/>
-  <polygon points="10.0,149.5 10.0,149.5 14.8,149.6 19.7,155.8 24.5,160.4 29.4,166.7 34.2,162.0 39.1,162.8 43.9,165.2 48.8,163.7 53.6,170.0 58.4,164.1 63.3,150.3 68.1,156.5 73.0,142.8 77.8,129.0 82.7,117.6 87.5,103.9 92.3,90.1 97.2,76.3 102.0,62.5 106.9,53.9 111.7,60.2 116.6,52.1 121.4,38.4 126.2,39.4 131.1,39.1 135.9,35.0 140.8,34.8 145.6,41.1 150.5,47.3 155.3,53.6 160.2,48.7 165.0,50.0 169.8,47.9 174.7,54.2 179.5,60.5 184.4,58.1 189.2,51.4 194.1,42.9 198.9,41.4 203.8,36.4 208.6,42.7 213.4,28.9 218.3,35.2 223.1,21.5 228.0,14.7 232.8,12.9 237.7,17.5 242.5,20.4 247.3,26.7 252.2,21.5 257.0,27.7 261.9,31.3 266.7,32.9 271.6,32.7 276.4,34.6 281.2,23.2 286.1,29.5 290.9,15.7 295.8,13.7 300.6,12.9 305.5,19.2 310.3,10.0 315.2,16.3 320.0,22.5 324.8,28.8 329.7,35.0 334.5,41.3 339.4,47.6 344.2,53.8 349.1,60.1 353.9,66.4 358.8,72.6 363.6,78.9 368.4,79.4 373.3,85.6 378.1,83.3 383.0,89.5 387.8,85.6 392.7,91.9 397.5,90.8 402.3,97.0 407.2,103.3 412.0,97.4 416.9,92.8 421.7,79.1 426.6,65.3 431.4,58.6 436.2,55.5 441.1,61.7 445.9,57.1 450.8,63.4 455.6,49.6 460.5,54.3 465.3,60.5 470.2,66.8 475.0,73.1 479.8,72.9 484.7,73.3 489.5,79.6 494.4,85.8 499.2,85.2 504.1,82.6 508.9,88.8 513.8,83.8 518.6,88.0 523.4,90.0 528.3,96.3 533.1,82.5 538.0,88.8 542.8,95.0 547.7,101.3 552.5,100.1 557.3,106.4 562.2,110.6 567.0,116.9 571.9,118.3 576.7,112.5 581.6,116.1 586.4,117.8 591.2,114.6 596.1,120.8 600.9,120.5 605.8,126.8 610.6,123.4 615.5,122.9 620.3,118.1 625.2,124.3 630.0,113.5 630.0,149.5" fill="var(--gain)" opacity="0.12"/>
-  <polyline points="10.0,149.5 14.8,149.6 19.7,155.8 24.5,160.4 29.4,166.7 34.2,162.0 39.1,162.8 43.9,165.2 48.8,163.7 53.6,170.0 58.4,164.1 63.3,150.3 68.1,156.5 73.0,142.8 77.8,129.0 82.7,117.6 87.5,103.9 92.3,90.1 97.2,76.3 102.0,62.5 106.9,53.9 111.7,60.2 116.6,52.1 121.4,38.4 126.2,39.4 131.1,39.1 135.9,35.0 140.8,34.8 145.6,41.1 150.5,47.3 155.3,53.6 160.2,48.7 165.0,50.0 169.8,47.9 174.7,54.2 179.5,60.5 184.4,58.1 189.2,51.4 194.1,42.9 198.9,41.4 203.8,36.4 208.6,42.7 213.4,28.9 218.3,35.2 223.1,21.5 228.0,14.7 232.8,12.9 237.7,17.5 242.5,20.4 247.3,26.7 252.2,21.5 257.0,27.7 261.9,31.3 266.7,32.9 271.6,32.7 276.4,34.6 281.2,23.2 286.1,29.5 290.9,15.7 295.8,13.7 300.6,12.9 305.5,19.2 310.3,10.0 315.2,16.3 320.0,22.5 324.8,28.8 329.7,35.0 334.5,41.3 339.4,47.6 344.2,53.8 349.1,60.1 353.9,66.4 358.8,72.6 363.6,78.9 368.4,79.4 373.3,85.6 378.1,83.3 383.0,89.5 387.8,85.6 392.7,91.9 397.5,90.8 402.3,97.0 407.2,103.3 412.0,97.4 416.9,92.8 421.7,79.1 426.6,65.3 431.4,58.6 436.2,55.5 441.1,61.7 445.9,57.1 450.8,63.4 455.6,49.6 460.5,54.3 465.3,60.5 470.2,66.8 475.0,73.1 479.8,72.9 484.7,73.3 489.5,79.6 494.4,85.8 499.2,85.2 504.1,82.6 508.9,88.8 513.8,83.8 518.6,88.0 523.4,90.0 528.3,96.3 533.1,82.5 538.0,88.8 542.8,95.0 547.7,101.3 552.5,100.1 557.3,106.4 562.2,110.6 567.0,116.9 571.9,118.3 576.7,112.5 581.6,116.1 586.4,117.8 591.2,114.6 596.1,120.8 600.9,120.5 605.8,126.8 610.6,123.4 615.5,122.9 620.3,118.1 625.2,124.3 630.0,113.5" fill="none" stroke="var(--gain)" stroke-width="2.5"/>
+  <line x1="10" y1="117.3" x2="630" y2="117.3" stroke="var(--line-strong)" stroke-width="1" stroke-dasharray="3,3"/>
+  <polygon points="10.0,117.3 10.0,117.3 15.4,124.0 20.8,133.2 26.2,126.4 31.6,127.5 37.0,131.0 42.3,140.2 47.7,149.4 53.1,150.3 58.5,130.1 63.9,139.3 69.3,119.1 74.7,128.3 80.1,111.6 85.5,91.4 90.9,71.2 96.3,51.0 101.7,38.3 107.0,32.8 112.4,42.0 117.8,30.2 123.2,10.0 128.6,16.5 134.0,16.0 139.4,25.2 144.8,34.4 150.2,43.5 155.6,52.7 161.0,61.9 166.3,58.9 171.7,48.7 177.1,57.9 182.5,67.1 187.9,63.6 193.3,53.7 198.7,41.3 204.1,39.0 209.5,48.2 214.9,33.9 220.3,13.7 225.7,22.9 231.0,19.2 236.4,20.8 241.8,24.5 247.2,33.7 252.6,42.9 258.0,52.1 263.4,46.3 268.8,51.5 274.2,31.3 279.6,40.5 285.0,49.7 290.3,33.0 295.7,42.2 301.1,21.9 306.5,19.0 311.9,17.9 317.3,27.1 322.7,36.3 328.1,45.5 333.5,54.7 338.9,63.9 344.3,73.0 349.7,82.2 355.0,91.4 360.4,100.6 365.8,109.8 371.2,99.2 376.6,108.4 382.0,109.2 387.4,118.4 392.8,114.9 398.2,124.0 403.6,133.2 409.0,142.4 414.3,151.6 419.7,150.7 425.1,142.1 430.5,134.3 435.9,114.0 441.3,93.8 446.7,84.1 452.1,74.0 457.5,66.0 462.9,75.2 468.3,82.1 473.7,91.2 479.0,100.4 484.4,109.6 489.8,109.4 495.2,110.0 500.6,119.2 506.0,128.4 511.4,124.5 516.8,133.7 522.2,134.4 527.6,143.6 533.0,152.8 538.3,132.6 543.7,141.8 549.1,151.0 554.5,160.2 559.9,169.4 565.3,149.1 570.7,155.4 576.1,164.6 581.5,155.9 586.9,154.4 592.3,156.9 597.7,152.1 603.0,161.3 608.4,160.8 613.8,170.0 619.2,169.3 624.6,162.2 630.0,146.2 630.0,117.3" fill="var(--loss)" opacity="0.12"/>
+  <polyline points="10.0,117.3 15.4,124.0 20.8,133.2 26.2,126.4 31.6,127.5 37.0,131.0 42.3,140.2 47.7,149.4 53.1,150.3 58.5,130.1 63.9,139.3 69.3,119.1 74.7,128.3 80.1,111.6 85.5,91.4 90.9,71.2 96.3,51.0 101.7,38.3 107.0,32.8 112.4,42.0 117.8,30.2 123.2,10.0 128.6,16.5 134.0,16.0 139.4,25.2 144.8,34.4 150.2,43.5 155.6,52.7 161.0,61.9 166.3,58.9 171.7,48.7 177.1,57.9 182.5,67.1 187.9,63.6 193.3,53.7 198.7,41.3 204.1,39.0 209.5,48.2 214.9,33.9 220.3,13.7 225.7,22.9 231.0,19.2 236.4,20.8 241.8,24.5 247.2,33.7 252.6,42.9 258.0,52.1 263.4,46.3 268.8,51.5 274.2,31.3 279.6,40.5 285.0,49.7 290.3,33.0 295.7,42.2 301.1,21.9 306.5,19.0 311.9,17.9 317.3,27.1 322.7,36.3 328.1,45.5 333.5,54.7 338.9,63.9 344.3,73.0 349.7,82.2 355.0,91.4 360.4,100.6 365.8,109.8 371.2,99.2 376.6,108.4 382.0,109.2 387.4,118.4 392.8,114.9 398.2,124.0 403.6,133.2 409.0,142.4 414.3,151.6 419.7,150.7 425.1,142.1 430.5,134.3 435.9,114.0 441.3,93.8 446.7,84.1 452.1,74.0 457.5,66.0 462.9,75.2 468.3,82.1 473.7,91.2 479.0,100.4 484.4,109.6 489.8,109.4 495.2,110.0 500.6,119.2 506.0,128.4 511.4,124.5 516.8,133.7 522.2,134.4 527.6,143.6 533.0,152.8 538.3,132.6 543.7,141.8 549.1,151.0 554.5,160.2 559.9,169.4 565.3,149.1 570.7,155.4 576.1,164.6 581.5,155.9 586.9,154.4 592.3,156.9 597.7,152.1 603.0,161.3 608.4,160.8 613.8,170.0 619.2,169.3 624.6,162.2 630.0,146.2" fill="none" stroke="var(--loss)" stroke-width="2.5"/>
 </svg>
   </div>
   
+  <div class="warning">
+    Expectancy is at or below zero over this test period. Historically, this rule
+    set would not have made money here even before real-world costs (slippage,
+    brokerage, taxes). This doesn't mean it will always fail, but it's a genuine
+    signal to treat live actionable trades with extra caution, and worth revisiting
+    the scoring/setup rules before relying on them further.
+  </div>
   <div class="section">
     <h2>Most Recent Signals</h2>
     
@@ -271,18 +289,6 @@ table.hist a { color: var(--saffron); text-decoration: none; font-family: var(--
     <span>Entry <b>₹2127.58</b></span>
     <span>Exit <b>₹2265.2</b></span>
     <span>R <b>+1.74</b></span>
-  </div>
-</div>
-<div class="trade-card">
-  <div class="row1">
-    <span class="ticker">MAXHEALTH</span>
-    <span class="stamp STOP_HIT">Stop Hit</span>
-  </div>
-  <div class="dates">Trend Pullback &middot; signal 2026-07-10 &middot; held 10 sessions</div>
-  <div class="prices">
-    <span>Entry <b>₹1113.64</b></span>
-    <span>Exit <b>₹1071.7</b></span>
-    <span>R <b>-1.00</b></span>
   </div>
 </div>
 <div class="trade-card">
@@ -307,18 +313,6 @@ table.hist a { color: var(--saffron); text-decoration: none; font-family: var(--
     <span>Entry <b>₹1015.34</b></span>
     <span>Exit <b>₹1026.0</b></span>
     <span>R <b>+0.08</b></span>
-  </div>
-</div>
-<div class="trade-card">
-  <div class="row1">
-    <span class="ticker">BAJAJFINSV</span>
-    <span class="stamp EXPIRED">Expired</span>
-  </div>
-  <div class="dates">Breakout &middot; signal 2026-07-02 &middot; held 20 sessions</div>
-  <div class="prices">
-    <span>Entry <b>₹1814.83</b></span>
-    <span>Exit <b>₹1909.4</b></span>
-    <span>R <b>+0.54</b></span>
   </div>
 </div>
 <div class="trade-card">
@@ -383,14 +377,14 @@ table.hist a { color: var(--saffron); text-decoration: none; font-family: var(--
 </div>
 <div class="trade-card">
   <div class="row1">
-    <span class="ticker">TRENT</span>
+    <span class="ticker">PIDILITIND</span>
     <span class="stamp EXPIRED">Expired</span>
   </div>
-  <div class="dates">Breakout &middot; signal 2026-06-18 &middot; held 20 sessions</div>
+  <div class="dates">Breakout &middot; signal 2026-06-15 &middot; held 20 sessions</div>
   <div class="prices">
-    <span>Entry <b>₹3124.34</b></span>
-    <span>Exit <b>₹2860.2</b></span>
-    <span>R <b>-0.59</b></span>
+    <span>Entry <b>₹1547.42</b></span>
+    <span>Exit <b>₹1569.4</b></span>
+    <span>R <b>+0.17</b></span>
   </div>
 </div>
 <div class="trade-card">
@@ -403,18 +397,6 @@ table.hist a { color: var(--saffron); text-decoration: none; font-family: var(--
     <span>Entry <b>₹1988.43</b></span>
     <span>Exit <b>₹2145.6</b></span>
     <span>R <b>+0.94</b></span>
-  </div>
-</div>
-<div class="trade-card">
-  <div class="row1">
-    <span class="ticker">EICHERMOT</span>
-    <span class="stamp EXPIRED">Expired</span>
-  </div>
-  <div class="dates">Breakout &middot; signal 2026-06-15 &middot; held 20 sessions</div>
-  <div class="prices">
-    <span>Entry <b>₹7385.98</b></span>
-    <span>Exit <b>₹7220.88</b></span>
-    <span>R <b>-0.23</b></span>
   </div>
 </div>
 <div class="trade-card">
@@ -439,6 +421,42 @@ table.hist a { color: var(--saffron); text-decoration: none; font-family: var(--
     <span>Entry <b>₹1527.49</b></span>
     <span>Exit <b>₹1369.12</b></span>
     <span>R <b>-0.68</b></span>
+  </div>
+</div>
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">BHARATFORG</span>
+    <span class="stamp TARGET_HIT">Target Hit</span>
+  </div>
+  <div class="dates">Trend Pullback &middot; signal 2026-05-27 &middot; held 19 sessions</div>
+  <div class="prices">
+    <span>Entry <b>₹1942.4</b></span>
+    <span>Exit <b>₹2124.69</b></span>
+    <span>R <b>+2.20</b></span>
+  </div>
+</div>
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">DIVISLAB</span>
+    <span class="stamp STOP_HIT">Stop Hit</span>
+  </div>
+  <div class="dates">Trend Pullback &middot; signal 2026-05-27 &middot; held 3 sessions</div>
+  <div class="prices">
+    <span>Entry <b>₹6803.43</b></span>
+    <span>Exit <b>₹6551.79</b></span>
+    <span>R <b>-1.00</b></span>
+  </div>
+</div>
+<div class="trade-card">
+  <div class="row1">
+    <span class="ticker">MARICO</span>
+    <span class="stamp STOP_HIT">Stop Hit</span>
+  </div>
+  <div class="dates">Trend Pullback &middot; signal 2026-05-22 &middot; held 7 sessions</div>
+  <div class="prices">
+    <span>Entry <b>₹824.8</b></span>
+    <span>Exit <b>₹791.45</b></span>
+    <span>R <b>-1.00</b></span>
   </div>
 </div>
   </div>
