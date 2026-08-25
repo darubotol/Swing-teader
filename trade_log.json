@@ -126,5 +126,37 @@
     "date_closed": null,
     "exit_price": null,
     "pnl": null
+  },
+  {
+    "ticker": "IDEA.NS",
+    "sector": "Telecom",
+    "setup": "Breakout",
+    "score": 87.0,
+    "date_added": "2026-08-25",
+    "entry": 14.35,
+    "stop": 12.6,
+    "target": 18.2,
+    "qty": 857,
+    "capital_deployed": 12297.95,
+    "status": "OPEN",
+    "date_closed": null,
+    "exit_price": null,
+    "pnl": null
+  },
+  {
+    "ticker": "HINDALCO.NS",
+    "sector": "Metals & Mining",
+    "setup": "Trend Pullback",
+    "score": 86.6,
+    "date_added": "2026-08-25",
+    "entry": 1056.31,
+    "stop": 1004.74,
+    "target": 1169.76,
+    "qty": 19,
+    "capital_deployed": 20069.89,
+    "status": "OPEN",
+    "date_closed": null,
+    "exit_price": null,
+    "pnl": null
   }
 ]
