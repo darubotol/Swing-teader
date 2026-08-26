@@ -158,5 +158,21 @@
     "date_closed": null,
     "exit_price": null,
     "pnl": null
+  },
+  {
+    "ticker": "ABB.NS",
+    "sector": "Capital Goods & Infra",
+    "setup": "Trend Pullback",
+    "score": 78.0,
+    "date_added": "2026-08-26",
+    "entry": 7647.04,
+    "stop": 7360.49,
+    "target": 8277.45,
+    "qty": 2,
+    "capital_deployed": 15294.08,
+    "status": "OPEN",
+    "date_closed": null,
+    "exit_price": null,
+    "pnl": null
   }
 ]
