@@ -74,10 +74,10 @@
     "target": 3687.08,
     "qty": 6,
     "capital_deployed": 20575.56,
-    "status": "OPEN",
-    "date_closed": null,
-    "exit_price": null,
-    "pnl": null
+    "status": "STOP_HIT",
+    "date_closed": "2026-08-28",
+    "exit_price": 3312.07,
+    "pnl": -703.14
   },
   {
     "ticker": "ASHOKLEY.NS",
@@ -122,10 +122,10 @@
     "target": 4744.48,
     "qty": 4,
     "capital_deployed": 17560.96,
-    "status": "OPEN",
-    "date_closed": null,
-    "exit_price": null,
-    "pnl": null
+    "status": "STOP_HIT",
+    "date_closed": "2026-08-28",
+    "exit_price": 4229.22,
+    "pnl": -644.08
   },
   {
     "ticker": "IDEA.NS",
@@ -170,9 +170,9 @@
     "target": 8277.45,
     "qty": 2,
     "capital_deployed": 15294.08,
-    "status": "OPEN",
-    "date_closed": null,
-    "exit_price": null,
-    "pnl": null
+    "status": "STOP_HIT",
+    "date_closed": "2026-08-31",
+    "exit_price": 7360.49,
+    "pnl": -573.1
   }
 ]
