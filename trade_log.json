@@ -106,10 +106,10 @@
     "target": 6141.93,
     "qty": 3,
     "capital_deployed": 17078.46,
-    "status": "OPEN",
-    "date_closed": null,
-    "exit_price": null,
-    "pnl": null
+    "status": "STOP_HIT",
+    "date_closed": "2026-08-31",
+    "exit_price": 5488.68,
+    "pnl": -612.42
   },
   {
     "ticker": "TVSMOTOR.NS",
@@ -174,5 +174,37 @@
     "date_closed": "2026-08-31",
     "exit_price": 7360.49,
     "pnl": -573.1
+  },
+  {
+    "ticker": "SIEMENS.NS",
+    "sector": "Capital Goods & Infra",
+    "setup": "Trend Pullback",
+    "score": 79.3,
+    "date_added": "2026-08-31",
+    "entry": 4050.15,
+    "stop": 3890.46,
+    "target": 4401.47,
+    "qty": 5,
+    "capital_deployed": 20250.75,
+    "status": "OPEN",
+    "date_closed": null,
+    "exit_price": null,
+    "pnl": null
+  },
+  {
+    "ticker": "AUROPHARMA.NS",
+    "sector": "Pharma & Healthcare",
+    "setup": "Breakout",
+    "score": 76.0,
+    "date_added": "2026-08-31",
+    "entry": 1687.45,
+    "stop": 1536.8,
+    "target": 2018.88,
+    "qty": 9,
+    "capital_deployed": 15187.05,
+    "status": "OPEN",
+    "date_closed": null,
+    "exit_price": null,
+    "pnl": null
   }
 ]
