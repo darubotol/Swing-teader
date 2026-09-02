@@ -90,10 +90,10 @@
     "target": 189.55,
     "qty": 120,
     "capital_deployed": 20863.2,
-    "status": "OPEN",
-    "date_closed": null,
-    "exit_price": null,
-    "pnl": null
+    "status": "STOP_HIT",
+    "date_closed": "2026-09-02",
+    "exit_price": 166.73,
+    "pnl": -855.6
   },
   {
     "ticker": "HEROMOTOCO.NS",
@@ -154,10 +154,10 @@
     "target": 1169.76,
     "qty": 19,
     "capital_deployed": 20069.89,
-    "status": "OPEN",
-    "date_closed": null,
-    "exit_price": null,
-    "pnl": null
+    "status": "STOP_HIT",
+    "date_closed": "2026-09-02",
+    "exit_price": 1004.74,
+    "pnl": -979.83
   },
   {
     "ticker": "ABB.NS",
