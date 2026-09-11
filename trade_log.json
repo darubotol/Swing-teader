@@ -42,10 +42,10 @@
     "target": 4464.04,
     "qty": 5,
     "capital_deployed": 20386.4,
-    "status": "OPEN",
-    "date_closed": null,
-    "exit_price": null,
-    "pnl": null
+    "status": "STOP_HIT",
+    "date_closed": "2026-09-11",
+    "exit_price": 3901.48,
+    "pnl": -879.0
   },
   {
     "ticker": "TCS.NS",
@@ -186,10 +186,10 @@
     "target": 4401.47,
     "qty": 5,
     "capital_deployed": 20250.75,
-    "status": "OPEN",
-    "date_closed": null,
-    "exit_price": null,
-    "pnl": null
+    "status": "STOP_HIT",
+    "date_closed": "2026-09-11",
+    "exit_price": 3890.46,
+    "pnl": -798.45
   },
   {
     "ticker": "AUROPHARMA.NS",
