@@ -138,10 +138,10 @@
     "target": 18.2,
     "qty": 857,
     "capital_deployed": 12297.95,
-    "status": "OPEN",
-    "date_closed": null,
-    "exit_price": null,
-    "pnl": null
+    "status": "EXPIRED",
+    "date_closed": "2026-09-22",
+    "exit_price": 14.27,
+    "pnl": -68.56
   },
   {
     "ticker": "HINDALCO.NS",
