@@ -202,9 +202,9 @@
     "target": 2018.88,
     "qty": 9,
     "capital_deployed": 15187.05,
-    "status": "OPEN",
-    "date_closed": null,
-    "exit_price": null,
-    "pnl": null
+    "status": "EXPIRED",
+    "date_closed": "2026-09-28",
+    "exit_price": 1697.5,
+    "pnl": 90.45
   }
 ]
