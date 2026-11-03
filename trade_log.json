@@ -206,5 +206,21 @@
     "date_closed": "2026-09-28",
     "exit_price": 1697.5,
     "pnl": 90.45
+  },
+  {
+    "ticker": "BHARTIARTL.NS",
+    "sector": "Telecom",
+    "setup": "Breakout",
+    "score": 79.8,
+    "date_added": "2026-11-03",
+    "entry": 2006.9,
+    "stop": 1756.2,
+    "target": 2558.44,
+    "qty": 5,
+    "capital_deployed": 10034.5,
+    "status": "OPEN",
+    "date_closed": null,
+    "exit_price": null,
+    "pnl": null
   }
 ]
