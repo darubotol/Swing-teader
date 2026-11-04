@@ -222,5 +222,21 @@
     "date_closed": null,
     "exit_price": null,
     "pnl": null
+  },
+  {
+    "ticker": "MPHASIS.NS",
+    "sector": "IT",
+    "setup": "Trend Pullback",
+    "score": 75.8,
+    "date_added": "2026-11-04",
+    "entry": 2480.74,
+    "stop": 2416.22,
+    "target": 2622.68,
+    "qty": 8,
+    "capital_deployed": 19845.92,
+    "status": "OPEN",
+    "date_closed": null,
+    "exit_price": null,
+    "pnl": null
   }
 ]
