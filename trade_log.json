@@ -238,5 +238,21 @@
     "date_closed": null,
     "exit_price": null,
     "pnl": null
+  },
+  {
+    "ticker": "ULTRACEMCO.NS",
+    "sector": "Cement & Building Materials",
+    "setup": "Breakout",
+    "score": 84.5,
+    "date_added": "2026-11-05",
+    "entry": 11865.49,
+    "stop": 10426.0,
+    "target": 15032.37,
+    "qty": 1,
+    "capital_deployed": 11865.49,
+    "status": "OPEN",
+    "date_closed": null,
+    "exit_price": null,
+    "pnl": null
   }
 ]
