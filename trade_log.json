@@ -234,10 +234,10 @@
     "target": 2622.68,
     "qty": 8,
     "capital_deployed": 19845.92,
-    "status": "OPEN",
-    "date_closed": null,
-    "exit_price": null,
-    "pnl": null
+    "status": "TARGET_HIT",
+    "date_closed": "2026-11-06",
+    "exit_price": 2622.68,
+    "pnl": 1135.52
   },
   {
     "ticker": "ULTRACEMCO.NS",
@@ -250,6 +250,22 @@
     "target": 15032.37,
     "qty": 1,
     "capital_deployed": 11865.49,
+    "status": "OPEN",
+    "date_closed": null,
+    "exit_price": null,
+    "pnl": null
+  },
+  {
+    "ticker": "M&M.NS",
+    "sector": "Auto",
+    "setup": "Breakout",
+    "score": 80.8,
+    "date_added": "2026-11-06",
+    "entry": 3154.43,
+    "stop": 2747.9,
+    "target": 4048.8,
+    "qty": 3,
+    "capital_deployed": 9463.29,
     "status": "OPEN",
     "date_closed": null,
     "exit_price": null,
