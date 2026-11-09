@@ -270,5 +270,21 @@
     "date_closed": null,
     "exit_price": null,
     "pnl": null
+  },
+  {
+    "ticker": "HCLTECH.NS",
+    "sector": "IT",
+    "setup": "Trend Pullback",
+    "score": 81.8,
+    "date_added": "2026-11-09",
+    "entry": 1414.04,
+    "stop": 1357.34,
+    "target": 1538.78,
+    "qty": 14,
+    "capital_deployed": 19796.56,
+    "status": "OPEN",
+    "date_closed": null,
+    "exit_price": null,
+    "pnl": null
   }
 ]
