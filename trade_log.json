@@ -286,5 +286,37 @@
     "date_closed": null,
     "exit_price": null,
     "pnl": null
+  },
+  {
+    "ticker": "TECHM.NS",
+    "sector": "IT",
+    "setup": "Trend Pullback",
+    "score": 87.8,
+    "date_added": "2026-11-11",
+    "entry": 1797.44,
+    "stop": 1718.09,
+    "target": 1972.01,
+    "qty": 11,
+    "capital_deployed": 19771.84,
+    "status": "OPEN",
+    "date_closed": null,
+    "exit_price": null,
+    "pnl": null
+  },
+  {
+    "ticker": "TVSMOTOR.NS",
+    "sector": "Auto",
+    "setup": "Breakout",
+    "score": 79.8,
+    "date_added": "2026-11-11",
+    "entry": 4519.42,
+    "stop": 3821.2,
+    "target": 6055.5,
+    "qty": 2,
+    "capital_deployed": 9038.84,
+    "status": "OPEN",
+    "date_closed": null,
+    "exit_price": null,
+    "pnl": null
   }
 ]
