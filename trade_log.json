@@ -282,10 +282,10 @@
     "target": 1538.78,
     "qty": 14,
     "capital_deployed": 19796.56,
-    "status": "OPEN",
-    "date_closed": null,
-    "exit_price": null,
-    "pnl": null
+    "status": "STOP_HIT",
+    "date_closed": "2026-11-17",
+    "exit_price": 1357.34,
+    "pnl": -793.8
   },
   {
     "ticker": "TECHM.NS",
