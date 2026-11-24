@@ -318,5 +318,21 @@
     "date_closed": null,
     "exit_price": null,
     "pnl": null
+  },
+  {
+    "ticker": "DRREDDY.NS",
+    "sector": "Pharma & Healthcare",
+    "setup": "Trend Pullback",
+    "score": 81.8,
+    "date_added": "2026-11-24",
+    "entry": 1387.0,
+    "stop": 1332.85,
+    "target": 1506.13,
+    "qty": 15,
+    "capital_deployed": 20805.0,
+    "status": "OPEN",
+    "date_closed": null,
+    "exit_price": null,
+    "pnl": null
   }
 ]
